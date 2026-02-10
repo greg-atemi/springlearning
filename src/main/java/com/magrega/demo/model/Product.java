@@ -1,4 +1,4 @@
-package com.magrega.demo;
+package com.magrega.demo.model;
 
 import lombok.Data;
 
