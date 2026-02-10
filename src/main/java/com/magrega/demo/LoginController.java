@@ -6,15 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController
 {
-    @RequestMapping("/")
+    @RequestMapping("/login")
     public String greet()
     {
-        return "Welcome to Magrega!";
+        return "Login Page!";
     }
 
-    @RequestMapping("/about-us")
-    public String about()
-    {
-        return "We are a PLC";
-    }
 }
