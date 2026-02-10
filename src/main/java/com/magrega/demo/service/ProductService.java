@@ -39,4 +39,13 @@ public class ProductService
 
         products.set(index, prod);
     }
+
+    public Product deleteProductById(int prodId) {
+        Product deletedProduct = products.stream()
+                .filter(p -> p.getProdId() == prodId)
+                .findFirst().orElse(new Product(0, "No Item", 0));
+
+        products.remove(deletedProduct);
+        return deletedProduct;
+    }
 }
