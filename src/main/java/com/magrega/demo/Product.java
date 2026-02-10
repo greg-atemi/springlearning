@@ -1,4 +1,13 @@
 package com.magrega.demo;
 
-public class Product {
+import lombok.Data;
+
+@Data
+public class Product
+{
+    private int prodId;
+    private String prodName;
+    private int price;
+
+
 }
