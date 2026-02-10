@@ -37,9 +37,6 @@ public class ProductService
             }
         }
 
-        System.out.println("Index " + index);
-        System.out.println("Updating Product " + prod);
-
         products.set(index, prod);
     }
 }
