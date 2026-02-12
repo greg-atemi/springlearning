@@ -5,47 +5,38 @@ import java.util.List;
 import java.util.Arrays;
 
 import com.magrega.demo.model.Product;
+import com.magrega.demo.repository.ProductRepo;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Getter
 @Service
 public class ProductService
 {
-    List<Product> products = new ArrayList<>(Arrays.asList(
-            new Product(101, "Samsung", 10000),
-            new Product(102, "Sony", 20000)));
+    @Autowired
+    private ProductRepo productRepo;
+
+    public List<Product> getProducts()
+    {
+        return productRepo.findAll();
+    }
 
     public Product getProductById(int prodId)
     {
-        return products.stream()
-            .filter(p -> p.getProdId() == prodId)
-            .findFirst().orElse(new Product(0, "No Item", 0));
+        return productRepo.findById(prodId).orElse(null);
     }
 
     public void addProduct(Product prod)
     {
-        products.add(prod);
+        productRepo.save(prod);
     }
 
     public void updateProduct(Product prod) {
-        int index = 0;
-
-        for (int i = 0; i < products.size(); i++) {
-            if  (products.get(i).getProdId() == prod.getProdId()) {
-                index = i;
-            }
-        }
-
-        products.set(index, prod);
+        productRepo.save(prod);
     }
 
-    public Product deleteProductById(int prodId) {
-        Product deletedProduct = products.stream()
-                .filter(p -> p.getProdId() == prodId)
-                .findFirst().orElse(new Product(0, "No Item", 0));
-
-        products.remove(deletedProduct);
-        return deletedProduct;
+    public void deleteProductById(int prodId) {
+        productRepo.deleteById(prodId);
     }
 }

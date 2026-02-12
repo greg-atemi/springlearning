@@ -1,3 +1,12 @@
 spring:
   application:
     name: DemoApp
+
+  datasource:
+    url: jdbc:h2:mem:greg
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # <-- create missing tables automatically
+    show-sql: true
