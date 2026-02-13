@@ -26,9 +26,9 @@ public class ProductController
     }
 
     @DeleteMapping("/product/{prodId}")
-    public Product deleteProductById(@PathVariable int prodId)
+    public void deleteProductById(@PathVariable int prodId)
     {
-        return service.deleteProductById(prodId);
+        service.deleteProductById(prodId);
     }
 
     @PostMapping("/products")
