@@ -49,6 +49,26 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: springlearning-external
+  labels:
+    job: springlearning
+    app: springlearning
+spec:
+  selector:
+    app: springlearning
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30020
   type: NodePort
 
 ---
