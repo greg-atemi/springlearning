@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springlearning
+  labels:
+    app: springlearning
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springlearning
+  template:
+    metadata:
+      labels:
+        app: springlearning
+    spec:
+      containers:
+        - name: springlearning
+          image: gregatemi/springlearning:v1
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: springlearning
+  labels:
+    job: springlearning
+    app: springlearning
+spec:
+  selector:
+    app: springlearning
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: springlearning-external
+  labels:
+    job: springlearning
+    app: springlearning
+spec:
+  selector:
+    app: springlearning
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30020
+  type: NodePort
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: springlearning-monitor
+  labels:
+    release: prometheus
+    app: prometheus
+spec:
+  jobLabel: job
+  endpoints:
+    - interval: 10s
+      port: web
+      path: /actuator/prometheus  # Changed from /swagger-stats/metrics
+  selector:
+    matchLabels:
+      app: springlearning
