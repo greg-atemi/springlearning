@@ -1,14 +1,11 @@
 package com.magrega.demo.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-
-import com.magrega.demo.model.Product;
-import com.magrega.demo.repository.ProductRepo;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import com.magrega.demo.model.Product;
 import org.springframework.stereotype.Service;
+import com.magrega.demo.repository.ProductRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Service
@@ -32,11 +29,13 @@ public class ProductService
         productRepo.save(prod);
     }
 
-    public void updateProduct(Product prod) {
+    public void updateProduct(Product prod)
+    {
         productRepo.save(prod);
     }
 
-    public void deleteProductById(int prodId) {
+    public void deleteProductById(int prodId)
+    {
         productRepo.deleteById(prodId);
     }
 }

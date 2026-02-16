@@ -3,13 +3,30 @@ spring:
     name: DemoApp
 
   datasource:
-    url: jdbc:h2:mem:greg
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/springlearning
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      pool-name: HikariPool
 
   jpa:
     hibernate:
       ddl-auto: update   # <-- create missing tables automatically
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 management:
   endpoints:
     web:
