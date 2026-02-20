@@ -22,33 +22,33 @@ public class CategoryController
         return new ResponseEntity<>(service.getCategories(), HttpStatus.OK);
     }
 
-//    @GetMapping("/product/{id}")
-//    public ResponseEntity<Product> getProductById(@PathVariable int id)
-//    {
-//        Product product = service.getProductById(id);
-//
-//        if (product != null)
-//        {
-//            return new ResponseEntity<>(product, HttpStatus.OK);
-//        }
-//        else{
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
+    @GetMapping("/category/{id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable int id)
+    {
+        Category category = service.getCategoryById(id);
+
+        if (category != null)
+        {
+            return new ResponseEntity<>(category, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 //    @DeleteMapping("/product/{id}")
 //    public void deleteProductById(@PathVariable int id)
 //    {
 //        service.deleteProductById(id);
 //    }
-//
-//    @PostMapping("/product")
-//    public void addProduct(@RequestBody Product product)
-//    {
-//        System.out.println("Adding product " + product);;
-//        service.addProduct(product);
-//    }
-//
+
+    @PostMapping("/category")
+    public void addCategory(@RequestBody Category category)
+    {
+        System.out.println("Adding product " + category);;
+        service.addCategory(category);
+    }
+
 //    @PutMapping("/product")
 //    public void updateProduct(@RequestBody Product product)
 //    {
