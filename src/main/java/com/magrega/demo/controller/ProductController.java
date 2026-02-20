@@ -36,20 +36,20 @@ public class ProductController
         }
     }
 
-    @DeleteMapping("/product/{prodId}")
-    public void deleteProductById(@PathVariable int prodId)
+    @DeleteMapping("/product/{id}")
+    public void deleteProductById(@PathVariable int id)
     {
-        service.deleteProductById(prodId);
+        service.deleteProductById(id);
     }
 
-    @PostMapping("/products")
+    @PostMapping("/product")
     public void addProduct(@RequestBody Product product)
     {
         System.out.println("Adding product " + product);;
         service.addProduct(product);
     }
 
-    @PutMapping("/products")
+    @PutMapping("/product")
     public void updateProduct(@RequestBody Product product)
     {
         service.updateProduct(product);
