@@ -1,6 +1,7 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,14 +20,24 @@ public class Product
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
     private String description;
     private String brand;
     private BigDecimal price;
     private String category;
 
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Boolean available = Boolean.FALSE;
+
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Integer quantity = 0;
+
     private Date releaseDate;
-    private boolean available;
-    private int quantity;
+
+    private String imageName;
+    private String imageType;
+
+    @Lob
+    private byte[] imageData;
 }

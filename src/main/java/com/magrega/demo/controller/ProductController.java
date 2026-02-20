@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,20 +37,29 @@ public class ProductController
         }
     }
 
-    @DeleteMapping("/product/{prodId}")
-    public void deleteProductById(@PathVariable int prodId)
+    @DeleteMapping("/product/{id}")
+    public void deleteProductById(@PathVariable int id)
     {
-        service.deleteProductById(prodId);
+        service.deleteProductById(id);
     }
 
-    @PostMapping("/products")
-    public void addProduct(@RequestBody Product product)
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestPart Product product,
+                                        @RequestPart MultipartFile imageFile)
     {
-        System.out.println("Adding product " + product);;
-        service.addProduct(product);
+        System.out.println("Adding product " + product);
+
+        try {
+            Product myProduct = service.addProduct(product, imageFile);
+            return new ResponseEntity<>(myProduct, HttpStatus.CREATED);
+        }
+        catch (Exception e){
+            System.out.println("Error adding product " + product);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PutMapping("/products")
+    @PutMapping("/product")
     public void updateProduct(@RequestBody Product product)
     {
         service.updateProduct(product);
