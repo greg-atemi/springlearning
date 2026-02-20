@@ -20,10 +20,10 @@ public class CategoryService
         return categoryRepo.findAll();
     }
 
-//    public Category getBrandById(int prodId)
-//    {
-//        return categoryRepo.findById(prodId).orElse(null);
-//    }
+    public Category getCategoryById(int id)
+    {
+        return categoryRepo.findById(id).orElse(null);
+    }
 //
 //    public void addBrand(Category prod)
 //    {
