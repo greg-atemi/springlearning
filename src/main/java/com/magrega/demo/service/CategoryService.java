@@ -24,12 +24,12 @@ public class CategoryService
     {
         return categoryRepo.findById(id).orElse(null);
     }
-//
-//    public void addBrand(Category prod)
-//    {
-//        categoryRepo.save(prod);
-//    }
-//
+
+    public void addCategory(Category category)
+    {
+        categoryRepo.save(category);
+    }
+
 //    public void updateBrand(Category prod)
 //    {
 //        categoryRepo.save(prod);
