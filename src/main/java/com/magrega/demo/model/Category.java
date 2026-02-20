@@ -1,30 +1,23 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @Component
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product
+public class Category
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String description;
-    private Integer brandId;
-    private BigDecimal price;
-    private Date releaseDate;
-    private boolean available;
-    private int quantity;
 }

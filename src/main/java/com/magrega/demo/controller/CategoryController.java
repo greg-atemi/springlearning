@@ -1,0 +1,57 @@
+package com.magrega.demo.controller;
+
+import com.magrega.demo.model.Category;
+import com.magrega.demo.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@CrossOrigin
+@RestController
+@RequestMapping("/api")
+public class CategoryController
+{
+    @Autowired
+    CategoryService service;
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories(){
+        return new ResponseEntity<>(service.getCategories(), HttpStatus.OK);
+    }
+
+//    @GetMapping("/product/{id}")
+//    public ResponseEntity<Product> getProductById(@PathVariable int id)
+//    {
+//        Product product = service.getProductById(id);
+//
+//        if (product != null)
+//        {
+//            return new ResponseEntity<>(product, HttpStatus.OK);
+//        }
+//        else{
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @DeleteMapping("/product/{id}")
+//    public void deleteProductById(@PathVariable int id)
+//    {
+//        service.deleteProductById(id);
+//    }
+//
+//    @PostMapping("/product")
+//    public void addProduct(@RequestBody Product product)
+//    {
+//        System.out.println("Adding product " + product);;
+//        service.addProduct(product);
+//    }
+//
+//    @PutMapping("/product")
+//    public void updateProduct(@RequestBody Product product)
+//    {
+//        service.updateProduct(product);
+//    }
+}
