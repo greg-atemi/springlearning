@@ -1,6 +1,5 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +21,7 @@ public class Product
     private Integer id;
     private String name;
     private String description;
-    private Integer brandId;
+    private Integer categoryId;
     private BigDecimal price;
     private Date releaseDate;
     private boolean available;

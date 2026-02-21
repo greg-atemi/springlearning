@@ -36,22 +36,21 @@ public class CategoryController
         }
     }
 
-//    @DeleteMapping("/product/{id}")
-//    public void deleteProductById(@PathVariable int id)
-//    {
-//        service.deleteProductById(id);
-//    }
+    @DeleteMapping("/category/{id}")
+    public void deleteCategory(@PathVariable int id)
+    {
+        service.deleteCategoryById(id);
+    }
 
     @PostMapping("/category")
     public void addCategory(@RequestBody Category category)
     {
-        System.out.println("Adding product " + category);;
         service.addCategory(category);
     }
 
-//    @PutMapping("/product")
-//    public void updateProduct(@RequestBody Product product)
-//    {
-//        service.updateProduct(product);
-//    }
+    @PutMapping("/category")
+    public void updateCategory(@RequestBody Category category)
+    {
+        service.updateCategoryById(category);
+    }
 }
