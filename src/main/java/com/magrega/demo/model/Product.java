@@ -1,6 +1,5 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +18,11 @@ public class Product
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
     private String description;
-    private String brand;
+    private Integer categoryId;
     private BigDecimal price;
-    private String category;
-
     private Date releaseDate;
     private boolean available;
     private int quantity;
