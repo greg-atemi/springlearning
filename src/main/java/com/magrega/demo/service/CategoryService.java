@@ -30,13 +30,13 @@ public class CategoryService
         categoryRepo.save(category);
     }
 
-//    public void updateBrand(Category prod)
-//    {
-//        categoryRepo.save(prod);
-//    }
-//
-//    public void deleteBrandById(int prodId)
-//    {
-//        categoryRepo.deleteById(prodId);
-//    }
+    public void updateCategoryById(Category category)
+    {
+        categoryRepo.save(category);
+    }
+
+    public void deleteCategoryById(int id)
+    {
+        categoryRepo.deleteById(id);
+    }
 }
