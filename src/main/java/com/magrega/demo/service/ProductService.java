@@ -1,10 +1,13 @@
 package com.magrega.demo.service;
 
+import com.magrega.demo.dto.ProductDTO;
+import com.magrega.demo.model.Category;
 import lombok.Getter;
 import java.util.List;
 import com.magrega.demo.model.Product;
 import org.springframework.stereotype.Service;
 import com.magrega.demo.repository.ProductRepo;
+import com.magrega.demo.repository.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
@@ -13,6 +16,9 @@ public class ProductService
 {
     @Autowired
     private ProductRepo productRepo;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
 
     public List<Product> getProducts()
     {
@@ -24,9 +30,24 @@ public class ProductService
         return productRepo.findById(prodId).orElse(null);
     }
 
-    public void addProduct(Product prod)
+    public void addProduct(ProductDTO dto)
     {
-        productRepo.save(prod);
+        Product product = new Product();
+
+        product.setBrand(dto.getBrand());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setReleaseDate(dto.getReleaseDate());
+        product.setAvailable(dto.isAvailable());
+        product.setQuantity(dto.getQuantity());
+
+        Category category = categoryRepo.findById(dto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        product.setCategory(category);
+
+        productRepo.save(product);
     }
 
     public void updateProduct(Product prod)

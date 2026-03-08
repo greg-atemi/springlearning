@@ -1,5 +1,6 @@
 package com.magrega.demo.controller;
 
+import com.magrega.demo.dto.ProductDTO;
 import com.magrega.demo.model.Product;
 import com.magrega.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,10 @@ public class ProductController
     }
 
     @PostMapping("/product")
-    public void addProduct(@RequestBody Product product)
+    public ResponseEntity<?> addProduct(@RequestBody ProductDTO dto)
     {
-        service.addProduct(product);
+        service.addProduct(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/product")
