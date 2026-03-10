@@ -1,5 +1,8 @@
 package com.magrega.demo.controller;
 
+import com.magrega.demo.dto.AddressDTO;
+import com.magrega.demo.model.Address;
+import com.magrega.demo.service.AddressService;
 import com.magrega.demo.model.User;
 import com.magrega.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,9 @@ public class UserController
 {
     @Autowired
     UserService service;
+
+    @Autowired
+    AddressService addressService;
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers(){
@@ -43,9 +49,17 @@ public class UserController
     }
 
     @PostMapping("/user")
-    public void addCategory(@RequestBody User user)
+    public void addUser(@RequestBody User user)
     {
         service.addUser(user);
+    }
+
+    @PostMapping("/user/{id}/address")
+    public Address addAddress(
+            @PathVariable Integer id,
+            @RequestBody AddressDTO dto) {
+
+        return addressService.addAddressToUser(id, dto);
     }
 
     @PutMapping("/user")
