@@ -43,7 +43,7 @@ public class ProductService
         product.setQuantity(dto.getQuantity());
 
         Category category = categoryRepo.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new RuntimeException("Category not found"));
 
         product.setCategory(category);
 
