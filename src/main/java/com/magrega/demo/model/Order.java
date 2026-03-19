@@ -1,6 +1,7 @@
 package com.magrega.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
 import jakarta.persistence.*;
@@ -28,13 +29,11 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    @JsonBackReference
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 }
