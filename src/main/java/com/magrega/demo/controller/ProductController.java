@@ -1,6 +1,6 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.ProductDTO;
+import com.magrega.demo.dto.product.ProductDTO;
 import com.magrega.demo.model.Product;
 import com.magrega.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.AddressDTO;
+import com.magrega.demo.dto.address.AddressDTO;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.service.AddressService;
 import com.magrega.demo.model.User;

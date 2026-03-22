@@ -1,15 +1,18 @@
 package com.magrega.demo.service;
 
-import com.magrega.demo.dto.OrderDTO;
+import com.magrega.demo.dto.order.CreateOrderDTO;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.model.Order;
 import com.magrega.demo.model.User;
+import com.magrega.demo.model.enums.OrderStatus;
+import com.magrega.demo.model.enums.PaymentStatus;
 import com.magrega.demo.repository.AddressRepo;
 import com.magrega.demo.repository.OrderRepo;
 import com.magrega.demo.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -34,7 +37,7 @@ public class OrderService
         return orderRepo.findById(id).orElse(null);
     }
 
-    public Order createOrder(OrderDTO request) {
+    public Order createOrder(CreateOrderDTO request) {
 
         User user = userRepo.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -43,31 +46,31 @@ public class OrderService
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
         Order order = new Order();
-        order.setTotalAmount(request.getTotalAmount());
-        order.setOrderStatus(request.getOrderStatus());
-        order.setPaymentStatus(request.getPaymentStatus());
+        order.setOrderStatus(OrderStatus.PENDING);
+        order.setPaymentStatus(PaymentStatus.PENDING);
+        order.setTotalAmount(BigDecimal.ZERO);
         order.setUser(user);
         order.setAddress(address);
 
         return orderRepo.save(order);
     }
 
-    public Order updateOrderById(Integer id, OrderDTO request) {
+    public Order updateOrderById(Integer id, CreateOrderDTO request) {
 
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (request.getTotalAmount() != null) {
-            order.setTotalAmount(request.getTotalAmount());
-        }
-
-        if (request.getOrderStatus() != null) {
-            order.setOrderStatus(request.getOrderStatus());
-        }
-
-        if (request.getPaymentStatus() != null) {
-            order.setPaymentStatus(request.getPaymentStatus());
-        }
+//        if (request.getTotalAmount() != null) {
+//            order.setTotalAmount(request.getTotalAmount());
+//        }
+//
+//        if (request.getOrderStatus() != null) {
+//            order.setOrderStatus(request.getOrderStatus());
+//        }
+//
+//        if (request.getPaymentStatus() != null) {
+//            order.setPaymentStatus(request.getPaymentStatus());
+//        }
 
         if (request.getUserId() != null) {
             User user = userRepo.findById(request.getUserId())
