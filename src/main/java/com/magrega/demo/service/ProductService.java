@@ -1,6 +1,6 @@
 package com.magrega.demo.service;
 
-import com.magrega.demo.dto.ProductDTO;
+import com.magrega.demo.dto.product.ProductDTO;
 import com.magrega.demo.model.Category;
 import lombok.Getter;
 import java.util.List;

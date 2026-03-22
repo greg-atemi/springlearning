@@ -1,6 +1,6 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.OrderDTO;
+import com.magrega.demo.dto.order.CreateOrderDTO;
 import com.magrega.demo.model.Order;
 import com.magrega.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +44,13 @@ public class OrderController
     }
 
     @PostMapping("/order")
-    public Order updateOrderById(@RequestBody OrderDTO request) {
+    public Order createOrder(@RequestBody CreateOrderDTO request) {
         return service.createOrder(request);
     }
 
     @PutMapping("/order/{id}")
     public Order updateOrder(@PathVariable Integer id,
-                             @RequestBody OrderDTO request) {
+                             @RequestBody CreateOrderDTO request) {
         return service.updateOrderById(id, request);
     }
 }

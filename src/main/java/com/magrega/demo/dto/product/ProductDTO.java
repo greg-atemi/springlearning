@@ -1,4 +1,4 @@
-package com.magrega.demo.dto;
+package com.magrega.demo.dto.product;
 
 import lombok.Data;
 import java.math.BigDecimal;

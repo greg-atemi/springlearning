@@ -1,4 +1,4 @@
-package com.magrega.demo.dto;
+package com.magrega.demo.dto.address;
 
 import lombok.Data;
 
