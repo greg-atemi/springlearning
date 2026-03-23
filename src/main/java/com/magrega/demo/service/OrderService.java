@@ -1,6 +1,7 @@
 package com.magrega.demo.service;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
+import com.magrega.demo.dto.order.UpdateOrderStatusDTO;
 import com.magrega.demo.model.*;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
@@ -95,4 +96,49 @@ public class OrderService
         orderRepo.deleteById(id);
     }
 
+    public Order updateOrderStatus(UpdateOrderStatusDTO request) {
+
+        Order order = orderRepo.findById(request.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderStatus currentOrderStatus = order.getOrderStatus();
+        OrderStatus newOrderStatus = request.getOrderStatus();
+
+        System.out.println("---------------------");
+        System.out.println("CURRENT ORDER STATUS: " + currentOrderStatus);
+        System.out.println("NEW ORDER STATUS: " + newOrderStatus);
+        System.out.println("---------------------");
+
+        switch (newOrderStatus) {
+            case PENDING:
+                if (currentOrderStatus == OrderStatus.PENDING) {
+                    throw new RuntimeException("Order already Pending");
+                }
+                order.setOrderStatus(OrderStatus.PENDING);
+                break;
+
+            case SHIPPED:
+                if (currentOrderStatus == OrderStatus.SHIPPED) {
+                    throw new RuntimeException("Order already Shipped");
+                }
+                order.setOrderStatus(OrderStatus.SHIPPED);
+                break;
+
+            case DELIVERED:
+                if (currentOrderStatus == OrderStatus.DELIVERED) {
+                    throw new RuntimeException("Order already Delivered");
+                }
+                order.setOrderStatus(OrderStatus.DELIVERED);
+                break;
+
+            case CANCELLED:
+                if (currentOrderStatus == OrderStatus.CANCELLED) {
+                    throw new RuntimeException("Order already cancelled");
+                }
+                order.setOrderStatus(OrderStatus.CANCELLED);
+                break;
+        }
+
+        return orderRepo.save(order);
+    }
 }
