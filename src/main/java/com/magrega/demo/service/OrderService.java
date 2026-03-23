@@ -1,13 +1,12 @@
 package com.magrega.demo.service;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
-import com.magrega.demo.model.Address;
-import com.magrega.demo.model.Order;
-import com.magrega.demo.model.User;
+import com.magrega.demo.model.*;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
 import com.magrega.demo.repository.AddressRepo;
 import com.magrega.demo.repository.OrderRepo;
+import com.magrega.demo.repository.ProductRepo;
 import com.magrega.demo.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,8 @@ public class OrderService
 
     @Autowired
     private AddressRepo addressRepo;
+    @Autowired
+    private ProductRepo productRepo;
 
     public List<Order> getOrders()
     {
