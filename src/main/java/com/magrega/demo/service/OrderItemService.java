@@ -107,8 +107,19 @@ public class OrderItemService
             order.addItem(orderItem);
             orderItemRepo.save(orderItem);
 
+            // 🔥 Recalculate order total
+            order.setTotalAmount(calculateOrderTotal(order));
+
+            orderRepo.save(order);
+
             return orderItem;
         }
+    }
+
+    private BigDecimal calculateOrderTotal(Order order) {
+        return order.getItems().stream()
+                .map(OrderItem::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void deleteOrderItemById(int id) {
