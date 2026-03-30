@@ -1,6 +1,6 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +19,17 @@ public class Product
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+    private String brand;
     private String name;
     private String description;
-    private String brand;
-    private BigDecimal price;
-    private String category;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    private Category category;
+
+    private BigDecimal price;
     private Date releaseDate;
     private boolean available;
     private int quantity;

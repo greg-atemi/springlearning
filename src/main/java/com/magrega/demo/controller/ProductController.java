@@ -1,5 +1,6 @@
 package com.magrega.demo.controller;
 
+import com.magrega.demo.dto.product.ProductDTO;
 import com.magrega.demo.model.Product;
 import com.magrega.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +37,20 @@ public class ProductController
         }
     }
 
-    @DeleteMapping("/product/{prodId}")
-    public void deleteProductById(@PathVariable int prodId)
+    @DeleteMapping("/product/{id}")
+    public void deleteProductById(@PathVariable int id)
     {
-        service.deleteProductById(prodId);
+        service.deleteProductById(id);
     }
 
-    @PostMapping("/products")
-    public void addProduct(@RequestBody Product product)
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestBody ProductDTO dto)
     {
-        System.out.println("Adding product " + product);;
-        service.addProduct(product);
+        service.addProduct(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/products")
+    @PutMapping("/product")
     public void updateProduct(@RequestBody Product product)
     {
         service.updateProduct(product);
