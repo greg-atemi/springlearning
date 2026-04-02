@@ -1,11 +1,14 @@
 package com.magrega.demo.controller;
 
+import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.service.AddressService;
+import com.magrega.demo.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -106,4 +109,13 @@ class AddressControllerTest {
         mockMvc.perform(delete("/api/address/1"))
                 .andExpect(status().isOk());
     }
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
 }

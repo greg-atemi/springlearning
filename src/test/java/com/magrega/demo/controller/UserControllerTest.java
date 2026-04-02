@@ -1,21 +1,25 @@
 package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.address.AddressDTO;
+import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.model.User;
 import com.magrega.demo.service.AddressService;
+import com.magrega.demo.service.JwtService;
 import com.magrega.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -25,6 +29,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,7 +58,7 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mockUser = new User();
-        mockUser.setId(1);
+        mockUser.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockUser.setFirstName("Greg");
         mockUser.setLastName("Atemi");
         mockUser.setEmail("greg@systechafrica.com");
@@ -87,7 +100,7 @@ class UserControllerTest {
 
     @Test
     void GET_userById_ShouldReturn200_WhenFound() throws Exception {
-        when(userService.getUserById(1)).thenReturn(mockUser);
+        when(userService.getUserById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(mockUser);
 
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isOk())
@@ -97,7 +110,7 @@ class UserControllerTest {
 
     @Test
     void GET_userById_ShouldReturn404_WhenNotFound() throws Exception {
-        when(userService.getUserById(99)).thenReturn(null);
+        when(userService.getUserById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(null);
 
         mockMvc.perform(get("/api/user/99"))
                 .andExpect(status().isNotFound());
@@ -115,7 +128,7 @@ class UserControllerTest {
 
     @Test
     void POST_addAddressToUser_ShouldReturn200_WhenAdded() throws Exception {
-        when(addressService.addAddressToUser(eq(1), any(AddressDTO.class)))
+        when(addressService.addAddressToUser(eq(UUID.fromString("00000000-0000-0000-0000-000000000001")), any(AddressDTO.class)))
                 .thenReturn(mockAddress);
 
         mockMvc.perform(post("/api/user/1/address")
@@ -138,7 +151,7 @@ class UserControllerTest {
 
     @Test
     void DELETE_user_ShouldReturn200_WhenDeleted() throws Exception {
-        doNothing().when(userService).deleteUserById(1);
+        doNothing().when(userService).deleteUserById(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         mockMvc.perform(delete("/api/user/1"))
                 .andExpect(status().isOk());
