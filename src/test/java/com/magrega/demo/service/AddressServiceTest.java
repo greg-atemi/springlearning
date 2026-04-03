@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +39,7 @@ class AddressServiceTest {
     @BeforeEach
     void setUp() {
         mockUser = new User();
-        mockUser.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        mockUser.setId(1);
         mockUser.setAddressList(new ArrayList<>());  // must be mutable list
 
         mockAddress = new Address();
@@ -192,10 +191,10 @@ class AddressServiceTest {
 
     @Test
     void addAddressToUser_ShouldSaveAndReturnAddress_WhenUserExists() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(addressRepo.save(any(Address.class))).thenReturn(mockAddress);
 
-        Address result = addressService.addAddressToUser(UUID.fromString("00000000-0000-0000-0000-000000000001"), mockAddressDTO);
+        Address result = addressService.addAddressToUser(1, mockAddressDTO);
 
         assertThat(result).isNotNull();
         assertThat(result.getCountry()).isEqualTo("Kenya");
@@ -204,10 +203,10 @@ class AddressServiceTest {
 
     @Test
     void addAddressToUser_ShouldMapAllDTOFields_Correctly() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(addressRepo.save(any(Address.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        Address result = addressService.addAddressToUser(UUID.fromString("00000000-0000-0000-0000-000000000001"), mockAddressDTO);
+        Address result = addressService.addAddressToUser(1, mockAddressDTO);
 
         assertThat(result.getCountry()).isEqualTo("Kenya");
         assertThat(result.getCounty()).isEqualTo("Nairobi");
@@ -217,10 +216,10 @@ class AddressServiceTest {
 
     @Test
     void addAddressToUser_ShouldLinkAddressToUser() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(addressRepo.save(any(Address.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        Address result = addressService.addAddressToUser(UUID.fromString("00000000-0000-0000-0000-000000000001"), mockAddressDTO);
+        Address result = addressService.addAddressToUser(1, mockAddressDTO);
 
         // Address should be linked to the user
         assertThat(result.getUser()).isEqualTo(mockUser);
@@ -231,9 +230,9 @@ class AddressServiceTest {
 
     @Test
     void addAddressToUser_ShouldThrowRuntimeException_WhenUserNotFound() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.empty());
+        when(userRepo.findById(99)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> addressService.addAddressToUser(UUID.fromString("00000000-0000-0000-0000-000000000001"), mockAddressDTO))
+        assertThatThrownBy(() -> addressService.addAddressToUser(99, mockAddressDTO))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("User not found");
 
@@ -242,10 +241,10 @@ class AddressServiceTest {
 
     @Test
     void addAddressToUser_ShouldNotCallDeleteOrFind_OnAddressRepo() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(addressRepo.save(any(Address.class))).thenReturn(mockAddress);
 
-        addressService.addAddressToUser(UUID.fromString("00000000-0000-0000-0000-000000000001"), mockAddressDTO);
+        addressService.addAddressToUser(1, mockAddressDTO);
 
         verify(addressRepo, never()).findById(any());
         verify(addressRepo, never()).deleteById(any());

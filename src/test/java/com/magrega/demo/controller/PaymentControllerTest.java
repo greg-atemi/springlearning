@@ -2,17 +2,14 @@ package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.payment.ApprovePaymentDTO;
 import com.magrega.demo.dto.payment.CreatePaymentDTO;
-import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Payment;
 import com.magrega.demo.model.enums.PaymentMethod;
-import com.magrega.demo.service.JwtService;
 import com.magrega.demo.service.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -21,11 +18,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PaymentController.class)
 class PaymentControllerTest {
@@ -38,15 +33,6 @@ class PaymentControllerTest {
 
     @MockitoBean
     private PaymentService paymentService;
-
-    @MockitoBean
-    private JwtService jwtService;              // ← added
-
-    @MockitoBean
-    private UserDetailsService userDetailsService; // ← added
-
-    @MockitoBean
-    private JwtAuthFilter jwtAuthFilter;        // ← added
 
     private Payment mockPayment;
     private CreatePaymentDTO mockCreateDTO;

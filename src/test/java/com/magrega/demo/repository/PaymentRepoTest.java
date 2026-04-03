@@ -4,7 +4,6 @@ import com.magrega.demo.model.*;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentMethod;
 import com.magrega.demo.model.enums.PaymentStatus;
-import com.magrega.demo.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,11 @@ class PaymentRepoTest {
 
     @BeforeEach
     void setUp() {
-        User user = TestDataFactory.buildUser("uniqueemail@systechafrica.com");
+        User user = new User();
+        user.setFirstName("Greg");
+        user.setLastName("Atemi");
+        user.setEmail("greg@systechafrica.com");
+        user.setAddressList(new ArrayList<>());
         userRepo.save(user);
 
         Address address = new Address();

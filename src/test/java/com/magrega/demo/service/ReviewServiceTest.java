@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +44,7 @@ class ReviewServiceTest {
     @BeforeEach
     void setUp() {
         mockUser = new User();
-        mockUser.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        mockUser.setId(1);
         mockUser.setFirstName("John");
         mockUser.setLastName("Doe");
 
@@ -61,7 +60,7 @@ class ReviewServiceTest {
         mockReview.setComment("Excellent phone!");
 
         mockRequest = new CreateReviewDTO();
-        mockRequest.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        mockRequest.setUserId(1);
         mockRequest.setProductId(1);
         mockRequest.setRating(5);
         mockRequest.setComment("Excellent phone!");
@@ -123,7 +122,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldCreateAndReturnReview_WhenValid() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(productRepo.findById(1)).thenReturn(Optional.of(mockProduct));
         when(reviewRepo.save(any(Review.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -137,7 +136,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldLinkUserAndProduct() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(productRepo.findById(1)).thenReturn(Optional.of(mockProduct));
         when(reviewRepo.save(any(Review.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -149,7 +148,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldSetCommentedAt() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(productRepo.findById(1)).thenReturn(Optional.of(mockProduct));
         when(reviewRepo.save(any(Review.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -160,8 +159,8 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldThrow_WhenUserNotFound() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.empty());
-        mockRequest.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        when(userRepo.findById(99)).thenReturn(Optional.empty());
+        mockRequest.setUserId(99);
 
         assertThatThrownBy(() -> reviewService.createReview(mockRequest))
                 .isInstanceOf(RuntimeException.class)
@@ -173,7 +172,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldThrow_WhenProductNotFound() {
-        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
         when(productRepo.findById(99)).thenReturn(Optional.empty());
         mockRequest.setProductId(99);
 

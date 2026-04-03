@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -30,7 +29,7 @@ public class UserController
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID id)
+    public ResponseEntity<User> getUserById(@PathVariable int id)
     {
         User user = service.getUserById(id);
 
@@ -44,20 +43,20 @@ public class UserController
     }
 
     @DeleteMapping("/user/{id}")
-    public void deleteUserById(@PathVariable UUID id)
+    public void deleteUserById(@PathVariable int id)
     {
         service.deleteUserById(id);
     }
 
-//    @PostMapping("/user")
-//    public void addUser(@RequestBody User user)
-//    {
-//        service.addUser(user);
-//    }
+    @PostMapping("/user")
+    public void addUser(@RequestBody User user)
+    {
+        service.addUser(user);
+    }
 
     @PostMapping("/user/{id}/address")
     public Address addAddress(
-            @PathVariable UUID id,
+            @PathVariable Integer id,
             @RequestBody AddressDTO dto) {
 
         return addressService.addAddressToUser(id, dto);
