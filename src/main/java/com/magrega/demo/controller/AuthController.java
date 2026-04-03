@@ -1,7 +1,7 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.request.LoginRequest;
-import com.magrega.demo.dto.request.RegisterRequest;
+import com.magrega.demo.dto.user.LoginUserDTO;
+import com.magrega.demo.dto.user.RegisterUserDTO;
 import com.magrega.demo.dto.response.AuthResponse;
 import com.magrega.demo.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterUserDTO request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginUserDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

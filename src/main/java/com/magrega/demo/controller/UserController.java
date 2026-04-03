@@ -49,11 +49,11 @@ public class UserController
         service.deleteUserById(id);
     }
 
-    @PostMapping("/user")
-    public void addUser(@RequestBody User user)
-    {
-        service.addUser(user);
-    }
+//    @PostMapping("/user")
+//    public void addUser(@RequestBody User user)
+//    {
+//        service.addUser(user);
+//    }
 
     @PostMapping("/user/{id}/address")
     public Address addAddress(
