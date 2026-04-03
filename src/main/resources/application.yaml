@@ -1,6 +1,6 @@
 spring:
   application:
-    name: DemoApp
+    name: ecommerce-api
 
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/springlearning}
@@ -25,7 +25,7 @@ spring:
 app:
   jwt:
     secret: 2mY9QCxb4RVtIjJUyXdj2DeQNscx1YmAZ1i6pmZJ6V8=
-    expiration-ms: 900000
+    expiration-ms: 1800000
 
 logging:
   level:

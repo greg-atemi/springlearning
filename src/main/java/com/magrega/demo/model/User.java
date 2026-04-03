@@ -1,5 +1,6 @@
 package com.magrega.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.magrega.demo.model.enums.Role;
 import jakarta.persistence.CascadeType;
@@ -12,10 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +30,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {          // ← was missing
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -59,6 +57,8 @@ public class User implements UserDetails {          // ← was missing
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @JsonIgnore
+    @ToString.Exclude
     private List<Address> addressList;
 
     @Override
@@ -68,7 +68,7 @@ public class User implements UserDetails {          // ← was missing
 
     @Override
     public String getUsername() {
-        return email;                               // ← was missing
+        return email;
     }
 
     @Override
