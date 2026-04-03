@@ -2,15 +2,18 @@ package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
 import com.magrega.demo.dto.order.UpdateOrderStatusDTO;
+import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Order;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
+import com.magrega.demo.service.JwtService;
 import com.magrega.demo.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -18,6 +21,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,7 +55,7 @@ class OrderControllerTest {
         mockOrder.setItems(new ArrayList<>());
 
         mockCreateDTO = new CreateOrderDTO();
-        mockCreateDTO.setUserId(1);
+        mockCreateDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockCreateDTO.setAddressId(1);
 
         mockUpdateStatusDTO = new UpdateOrderStatusDTO();
@@ -138,4 +142,14 @@ class OrderControllerTest {
         mockMvc.perform(delete("/api/order/1"))
                 .andExpect(status().isOk());
     }
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
+
 }

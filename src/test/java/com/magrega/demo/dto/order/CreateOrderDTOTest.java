@@ -3,6 +3,8 @@ package com.magrega.demo.dto.order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateOrderDTOTest {
@@ -16,7 +18,7 @@ class CreateOrderDTOTest {
 
     @Test
     void testSetAndGetUserId() {
-        createOrderDTO.setUserId(42);
+        createOrderDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         assertEquals(42, createOrderDTO.getUserId());
     }
 
@@ -35,11 +37,11 @@ class CreateOrderDTOTest {
     @Test
     void testEqualsAndHashCode() {
         CreateOrderDTO dto1 = new CreateOrderDTO();
-        dto1.setUserId(1);
+        dto1.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         dto1.setAddressId(10);
 
         CreateOrderDTO dto2 = new CreateOrderDTO();
-        dto2.setUserId(1);
+        dto2.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         dto2.setAddressId(10);
 
         assertEquals(dto1, dto2);
@@ -49,17 +51,17 @@ class CreateOrderDTOTest {
     @Test
     void testNotEqualWhenFieldsDiffer() {
         CreateOrderDTO dto1 = new CreateOrderDTO();
-        dto1.setUserId(1);
+        dto1.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         CreateOrderDTO dto2 = new CreateOrderDTO();
-        dto2.setUserId(2);
+        dto2.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         assertNotEquals(dto1, dto2);
     }
 
     @Test
     void testToString() {
-        createOrderDTO.setUserId(5);
+        createOrderDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         createOrderDTO.setAddressId(3);
         String result = createOrderDTO.toString();
         assertTrue(result.contains("5"));

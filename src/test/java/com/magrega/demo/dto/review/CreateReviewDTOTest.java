@@ -3,6 +3,8 @@ package com.magrega.demo.dto.review;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateReviewDTOTest {
@@ -16,7 +18,7 @@ class CreateReviewDTOTest {
 
     @Test
     void testSetAndGetUserId() {
-        createReviewDTO.setUserId(10);
+        createReviewDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         assertEquals(10, createReviewDTO.getUserId());
     }
 
@@ -74,13 +76,13 @@ class CreateReviewDTOTest {
     @Test
     void testEqualsAndHashCode() {
         CreateReviewDTO dto1 = new CreateReviewDTO();
-        dto1.setUserId(1);
+        dto1.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         dto1.setProductId(2);
         dto1.setRating(4);
         dto1.setComment("Great!");
 
         CreateReviewDTO dto2 = new CreateReviewDTO();
-        dto2.setUserId(1);
+        dto2.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         dto2.setProductId(2);
         dto2.setRating(4);
         dto2.setComment("Great!");
@@ -113,7 +115,7 @@ class CreateReviewDTOTest {
 
     @Test
     void testToString() {
-        createReviewDTO.setUserId(10);
+        createReviewDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         createReviewDTO.setRating(5);
         createReviewDTO.setComment("Fantastic!");
         String result = createReviewDTO.toString();
