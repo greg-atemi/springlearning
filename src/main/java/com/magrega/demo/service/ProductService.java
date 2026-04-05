@@ -3,6 +3,9 @@ package com.magrega.demo.service;
 import com.magrega.demo.dto.product.ProductDTO;
 import com.magrega.demo.model.Category;
 import lombok.Getter;
+
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.magrega.demo.model.Product;
 import org.springframework.stereotype.Service;
@@ -39,8 +42,12 @@ public class ProductService
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setReleaseDate(dto.getReleaseDate());
-        product.setAvailable(dto.isAvailable());
+        product.setAvailable(dto.getAvailable());
         product.setQuantity(dto.getQuantity());
+        product.setReviewCount(dto.getReviewCount());
+        product.setRating(dto.getRating());
+        product.setImageUrl(dto.getImageUrl());
+        product.setCompareAtPrice(dto.getCompareAtPrice());
 
         Category category = categoryRepo.findById(dto.getCategoryId())
             .orElseThrow(() -> new RuntimeException("Category not found"));
