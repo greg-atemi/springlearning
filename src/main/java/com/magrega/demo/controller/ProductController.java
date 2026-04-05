@@ -23,7 +23,7 @@ public class ProductController
         return new ResponseEntity<>(service.getProducts(), HttpStatus.OK);
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable int id)
     {
         Product product = service.getProductById(id);
@@ -37,20 +37,20 @@ public class ProductController
         }
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public void deleteProductById(@PathVariable int id)
     {
         service.deleteProductById(id);
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<?> addProduct(@RequestBody ProductDTO dto)
     {
         service.addProduct(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public void updateProduct(@RequestBody Product product)
     {
         service.updateProduct(product);
