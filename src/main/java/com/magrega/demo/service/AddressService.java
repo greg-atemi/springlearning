@@ -1,6 +1,6 @@
 package com.magrega.demo.service;
 
-import com.magrega.demo.dto.address.AddressDTO;
+import com.magrega.demo.dto.address.CreateAddressDTO;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.model.User;
 import com.magrega.demo.repository.AddressRepo;
@@ -45,16 +45,17 @@ public class AddressService {
         addressRepo.deleteById(id);
     }
 
-    public Address addAddressToUser(UUID userId, AddressDTO dto) {  // ← Integer → UUID
+    public Address addAddressToUser(UUID userId, CreateAddressDTO dto) {
 
-        User user = userRepo.findById(userId)                       // ← now matches
+        User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         Address address = new Address();
         address.setCountry(dto.getCountry());
         address.setCounty(dto.getCounty());
-        address.setLocality(dto.getLocality());
+        address.setLocalityArea(dto.getLocalityArea());
         address.setMapsPin(dto.getMapsPin());
+        address.setCityTown(dto.getCityTown());
         address.setUser(user);
 
         user.getAddressList().add(address);

@@ -1,6 +1,6 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.address.AddressDTO;
+import com.magrega.demo.dto.address.CreateAddressDTO;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.service.AddressService;
 import com.magrega.demo.model.User;
@@ -58,7 +58,7 @@ public class UserController
     @PostMapping("/user/{id}/address")
     public Address addAddress(
             @PathVariable UUID id,
-            @RequestBody AddressDTO dto) {
+            @RequestBody CreateAddressDTO dto) {
 
         return addressService.addAddressToUser(id, dto);
     }

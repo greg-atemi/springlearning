@@ -1,6 +1,6 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.address.AddressDTO;
+import com.magrega.demo.dto.address.CreateAddressDTO;
 import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.model.User;
@@ -53,7 +53,7 @@ class UserControllerTest {
 
     private User mockUser;
     private Address mockAddress;
-    private AddressDTO mockAddressDTO;
+    private CreateAddressDTO mockAddressDTO;
 
     @BeforeEach
     void setUp() {
@@ -68,11 +68,11 @@ class UserControllerTest {
         mockAddress.setId(1);
         mockAddress.setCountry("Kenya");
         mockAddress.setCounty("Nairobi");
-        mockAddress.setLocality("Westlands");
+        mockAddress.setCityTown("Westlands");
         mockAddress.setMapsPin("-1.2921,36.8219");
         mockAddress.setUser(mockUser);
 
-        mockAddressDTO = new AddressDTO();
+        mockAddressDTO = new CreateAddressDTO();
         mockAddressDTO.setCountry("Kenya");
         mockAddressDTO.setCounty("Nairobi");
         mockAddressDTO.setLocality("Westlands");
