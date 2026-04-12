@@ -2,6 +2,7 @@ package com.magrega.demo.service;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
 import com.magrega.demo.dto.order.UpdateOrderStatusDTO;
+import com.magrega.demo.dto.orderItem.CreateOrderItemDTO;
 import com.magrega.demo.model.*;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService
@@ -48,31 +50,43 @@ public class OrderService
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
         Order order = new Order();
-        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         order.setPaymentStatus(PaymentStatus.PENDING);
         order.setTotalAmount(BigDecimal.ZERO);
         order.setUser(user);
         order.setAddress(address);
 
-        return orderRepo.save(order);
+        Order savedOrder = orderRepo.save(order);
+
+        // Process items
+        if (request.getItems() != null) {
+            for (CreateOrderItemDTO itemDTO : request.getItems()) {
+                Product product = productRepo.findById(itemDTO.getProductId())
+                        .orElseThrow(() -> new RuntimeException("Product not found: " + itemDTO.getProductId()));
+
+                OrderItem orderItem = new OrderItem();
+                orderItem.setProduct(product);
+                orderItem.setQuantity(itemDTO.getQuantity());
+                orderItem.setUnitPrice(product.getPrice());
+                orderItem.setSubTotal(product.getPrice().multiply(BigDecimal.valueOf(itemDTO.getQuantity())));
+
+                savedOrder.addItem(orderItem);
+            }
+
+            // Recalculate total
+            BigDecimal total = savedOrder.getItems().stream()
+                    .map(OrderItem::getSubTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            savedOrder.setTotalAmount(total);
+        }
+
+        return orderRepo.save(savedOrder);
     }
 
     public Order updateOrderById(Integer id, CreateOrderDTO request) {
 
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-
-//        if (request.getTotalAmount() != null) {
-//            order.setTotalAmount(request.getTotalAmount());
-//        }
-//
-//        if (request.getOrderStatus() != null) {
-//            order.setOrderStatus(request.getOrderStatus());
-//        }
-//
-//        if (request.getPaymentStatus() != null) {
-//            order.setPaymentStatus(request.getPaymentStatus());
-//        }
 
         if (request.getUserId() != null) {
             User user = userRepo.findById(request.getUserId())
@@ -110,11 +124,11 @@ public class OrderService
         System.out.println("---------------------");
 
         switch (newOrderStatus) {
-            case PENDING:
-                if (currentOrderStatus == OrderStatus.PENDING) {
-                    throw new RuntimeException("Order already Pending");
+            case PROCESSING:
+                if (currentOrderStatus == OrderStatus.PROCESSING) {
+                    throw new RuntimeException("Order already PROCESSING");
                 }
-                order.setOrderStatus(OrderStatus.PENDING);
+                order.setOrderStatus(OrderStatus.PROCESSING);
                 break;
 
             case SHIPPED:
@@ -140,5 +154,9 @@ public class OrderService
         }
 
         return orderRepo.save(order);
+    }
+
+    public List<Order> getOrdersByUserId(UUID userId) {
+        return orderRepo.findByUserId(userId);
     }
 }

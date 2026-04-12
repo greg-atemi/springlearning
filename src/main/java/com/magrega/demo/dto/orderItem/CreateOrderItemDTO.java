@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class CreateOrderItemDTO {
     private Integer orderId;
-    private Integer quantity;
     private Integer productId;
+    private Integer quantity;
 }
