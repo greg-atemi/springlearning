@@ -30,8 +30,8 @@ public class AuthService {
                 .phoneNumber(request.getPhoneNumber())
                 .role(Role.USER)
                 .build();
-        userRepo.save(user);
-        String token = jwtService.generateToken(user);
+        user = userRepo.save(user);                    // save first, get ID back
+        String token = jwtService.generateToken(user); // then generate token
         return AuthResponse.builder().accessToken(token).build();
     }
 

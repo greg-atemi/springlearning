@@ -29,4 +29,9 @@ public class UserService {
     public void deleteUserById(UUID id) {
         userRepo.deleteById(id);
     }
+
+    public User findByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

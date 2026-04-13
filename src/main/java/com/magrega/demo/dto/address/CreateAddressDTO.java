@@ -7,7 +7,6 @@ public class CreateAddressDTO {
     private String mapsPin;
     private String county;
     private String country;
-    private String locality;
     private String cityTown;
     private String localityArea;
 }

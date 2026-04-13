@@ -1,7 +1,5 @@
 package com.magrega.demo.controller;
 
-import com.magrega.demo.dto.address.CreateAddressDTO;
-import com.magrega.demo.model.Address;
 import com.magrega.demo.service.AddressService;
 import com.magrega.demo.model.User;
 import com.magrega.demo.service.UserService;
@@ -47,20 +45,6 @@ public class UserController
     public void deleteUserById(@PathVariable UUID id)
     {
         service.deleteUserById(id);
-    }
-
-//    @PostMapping("/user")
-//    public void addUser(@RequestBody User user)
-//    {
-//        service.addUser(user);
-//    }
-
-    @PostMapping("/user/{id}/address")
-    public Address addAddress(
-            @PathVariable UUID id,
-            @RequestBody CreateAddressDTO dto) {
-
-        return addressService.addAddressToUser(id, dto);
     }
 
     @PutMapping("/user")

@@ -1,10 +1,14 @@
 package com.magrega.demo.controller;
 
 import com.magrega.demo.model.Address;
+import com.magrega.demo.model.User;
 import com.magrega.demo.service.AddressService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.magrega.demo.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,45 +16,62 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
-public class AddressController
-{
-    @Autowired
-    AddressService service;
+@RequiredArgsConstructor
+public class AddressController {
 
-    @GetMapping("/addresses")
-    public ResponseEntity<List<Address>> getAddresses(){
-        return new ResponseEntity<>(service.getAddresses(), HttpStatus.OK);
+    private final AddressService addressService;
+    private final UserService userService;
+
+    @GetMapping("/address")
+    public ResponseEntity<List<Address>> getAddresses() {
+        return new ResponseEntity<>(addressService.getAddresses(), HttpStatus.OK);
     }
 
     @GetMapping("/address/{id}")
-    public ResponseEntity<Address> getAddressById(@PathVariable int id)
-    {
-        Address address = service.getAddressById(id);
-
-        if (address != null)
-        {
+    public ResponseEntity<Address> getAddressById(@PathVariable int id) {
+        Address address = addressService.getAddressById(id);
+        if (address != null) {
             return new ResponseEntity<>(address, HttpStatus.OK);
         }
-        else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/address/{id}")
-    public void deleteAddressById(@PathVariable int id)
-    {
-        service.deleteAddressById(id);
+    public void deleteAddressById(@PathVariable int id) {
+        addressService.deleteAddressById(id);
     }
 
+//    @PostMapping("/address")
+//    public void addAddress(@RequestBody Address address) {
+//        addressService.addAddress(address);
+//    }
+
     @PostMapping("/address")
-    public void addAddress(@RequestBody Address address)
-    {
-        service.addAddress(address);
+    public ResponseEntity<Address> addAddress(@RequestBody Address address) {
+        Address saved = addressService.addAddress(address);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/address/{addressId}/assign")
+    public Address assignAddressToUser(
+            @PathVariable Long addressId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        User user = userService.findByEmail(userDetails.getUsername());
+        return addressService.assignAddressToUser(user.getId(), addressId);
+    }
+
+    @GetMapping("/address/my")
+    public ResponseEntity<List<Address>> getMyAddresses(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        User user = userService.findByEmail(userDetails.getUsername());
+        List<Address> addresses = addressService.getAddressesByUserId(user.getId());
+        return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
 
     @PutMapping("/address")
-    public void updateAddress(@RequestBody Address address)
-    {
-        service.updateAddressById(address);
+    public void updateAddress(@RequestBody Address address) {
+        addressService.updateAddressById(address);
     }
 }
