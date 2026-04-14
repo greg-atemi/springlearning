@@ -66,4 +66,17 @@ public class ProductService
     {
         productRepo.deleteById(prodId);
     }
+
+    public List<Product> searchProducts(
+            String search,
+            String category,
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+
+        // Pass null when blank so the query ignores the filter
+        String s   = (search   != null && !search.isBlank())   ? search   : null;
+        String c   = (category != null && !category.isBlank()) ? category : null;
+
+        return productRepo.search(s, c, minPrice, maxPrice);
+    }
 }

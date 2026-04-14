@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @CrossOrigin
@@ -19,7 +20,18 @@ public class ProductController
     ProductService service;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+
+        if (search != null || category != null || minPrice != null || maxPrice != null) {
+            return new ResponseEntity<>(
+                    service.searchProducts(search, category, minPrice, maxPrice),
+                    HttpStatus.OK
+            );
+        }
         return new ResponseEntity<>(service.getProducts(), HttpStatus.OK);
     }
 
