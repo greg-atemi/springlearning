@@ -46,6 +46,8 @@ public class SecurityConfig {
                         // ✅ Public read-only product & category endpoints
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        // Admin-only endpoints
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Everything else requires a valid JWT
                         .anyRequest().authenticated()
                 )

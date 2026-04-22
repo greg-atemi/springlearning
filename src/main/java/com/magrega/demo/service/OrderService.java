@@ -159,4 +159,8 @@ public class OrderService
     public List<Order> getOrdersByUserId(UUID userId) {
         return orderRepo.findByUserId(userId);
     }
+
+    public Order saveOrder(Order order) {
+        return orderRepo.save(order);
+    }
 }
