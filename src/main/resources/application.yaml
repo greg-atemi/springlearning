@@ -50,3 +50,13 @@ management:
         enabled: true
     tags:
       application: ${spring.application.name}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html       # custom path
+    operations-sorter: alpha     # sort endpoints alphabetically
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: false           # hide actuator endpoints from docs
+
