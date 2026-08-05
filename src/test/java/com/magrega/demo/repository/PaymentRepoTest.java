@@ -43,7 +43,7 @@ class PaymentRepoTest {
         Address address = new Address();
         address.setCountry("Kenya");
         address.setCounty("Nairobi");
-        address.setLocality("Westlands");
+        address.setLocalityArea("Westlands");
         address.setMapsPin("-1.2921,36.8219");
         address.setUser(user);
         addressRepo.save(address);
@@ -52,7 +52,7 @@ class PaymentRepoTest {
         order.setUser(user);
         order.setAddress(address);
         order.setTotalAmount(new BigDecimal("1999.98"));
-        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         order.setPaymentStatus(PaymentStatus.PENDING);
         order.setItems(new ArrayList<>());
         savedOrder = orderRepo.save(order);
@@ -85,7 +85,7 @@ class PaymentRepoTest {
         unpaidOrder.setUser(savedOrder.getUser());
         unpaidOrder.setAddress(savedOrder.getAddress());
         unpaidOrder.setTotalAmount(new BigDecimal("500.00"));
-        unpaidOrder.setOrderStatus(OrderStatus.PENDING);
+        unpaidOrder.setOrderStatus(OrderStatus.PROCESSING);
         unpaidOrder.setPaymentStatus(PaymentStatus.PENDING);
         unpaidOrder.setItems(new ArrayList<>());
         Order savedUnpaidOrder = orderRepo.save(unpaidOrder);
@@ -101,7 +101,7 @@ class PaymentRepoTest {
         order2.setUser(savedOrder.getUser());
         order2.setAddress(savedOrder.getAddress());
         order2.setTotalAmount(new BigDecimal("500.00"));
-        order2.setOrderStatus(OrderStatus.PENDING);
+        order2.setOrderStatus(OrderStatus.PROCESSING);
         order2.setPaymentStatus(PaymentStatus.PENDING);
         order2.setItems(new ArrayList<>());
         Order savedOrder2 = orderRepo.save(order2);

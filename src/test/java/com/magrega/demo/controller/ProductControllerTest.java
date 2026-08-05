@@ -8,6 +8,7 @@ import com.magrega.demo.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
@@ -55,7 +57,7 @@ class ProductControllerTest {
         mockProduct.setName("Galaxy S24");
         mockProduct.setDescription("Flagship smartphone");
         mockProduct.setPrice(new BigDecimal("999.99"));
-        mockProduct.setAvailable(true);
+        mockProduct.setIsAvailable(true);
         mockProduct.setQuantity(10);
 
         mockProductDTO = new ProductDTO();
@@ -63,7 +65,7 @@ class ProductControllerTest {
         mockProductDTO.setName("Galaxy S24");
         mockProductDTO.setDescription("Flagship smartphone");
         mockProductDTO.setPrice(new BigDecimal("999.99"));
-        mockProductDTO.setAvailable(true);
+        mockProductDTO.setIsAvailable(true);
         mockProductDTO.setQuantity(10);
         mockProductDTO.setCategoryId(1);
     }
@@ -91,7 +93,7 @@ class ProductControllerTest {
     void GET_productById_ShouldReturn200_WhenFound() throws Exception {
         when(productService.getProductById(1)).thenReturn(mockProduct);
 
-        mockMvc.perform(get("/api/product/1"))
+        mockMvc.perform(get("/api/products/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Galaxy S24"))
                 .andExpect(jsonPath("$.brand").value("Samsung"));
@@ -101,7 +103,7 @@ class ProductControllerTest {
     void GET_productById_ShouldReturn404_WhenNotFound() throws Exception {
         when(productService.getProductById(99)).thenReturn(null);
 
-        mockMvc.perform(get("/api/product/99"))
+        mockMvc.perform(get("/api/products/99"))
                 .andExpect(status().isNotFound());
     }
 
@@ -109,7 +111,7 @@ class ProductControllerTest {
     void POST_product_ShouldReturn201_WhenCreated() throws Exception {
         doNothing().when(productService).addProduct(any(ProductDTO.class));
 
-        mockMvc.perform(post("/api/product")
+        mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockProductDTO)))
                 .andExpect(status().isCreated());
@@ -119,7 +121,7 @@ class ProductControllerTest {
     void PUT_product_ShouldReturn200_WhenUpdated() throws Exception {
         doNothing().when(productService).updateProduct(any(Product.class));
 
-        mockMvc.perform(put("/api/product")
+        mockMvc.perform(put("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockProduct)))
                 .andExpect(status().isOk());
@@ -129,7 +131,7 @@ class ProductControllerTest {
     void DELETE_product_ShouldReturn200_WhenDeleted() throws Exception {
         doNothing().when(productService).deleteProductById(1);
 
-        mockMvc.perform(delete("/api/product/1"))
+        mockMvc.perform(delete("/api/products/1"))
                 .andExpect(status().isOk());
     }
 }

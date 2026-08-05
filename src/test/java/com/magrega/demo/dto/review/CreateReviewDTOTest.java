@@ -19,7 +19,10 @@ class CreateReviewDTOTest {
     @Test
     void testSetAndGetUserId() {
         createReviewDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-        assertEquals(10, createReviewDTO.getUserId());
+        assertEquals(
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                createReviewDTO.getUserId()
+        );
     }
 
     @Test
@@ -119,7 +122,7 @@ class CreateReviewDTOTest {
         createReviewDTO.setRating(5);
         createReviewDTO.setComment("Fantastic!");
         String result = createReviewDTO.toString();
-        assertTrue(result.contains("10"));
+        assertTrue(result.contains("00000000-0000-0000-0000-000000000001"));
         assertTrue(result.contains("5"));
         assertTrue(result.contains("Fantastic!"));
     }

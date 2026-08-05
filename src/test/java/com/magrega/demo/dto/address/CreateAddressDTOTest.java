@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressDTOTest {
+class CreateAddressDTOTest {
 
-    private AddressDTO addressDTO;
+    private CreateAddressDTO addressDTO;
 
     @BeforeEach
     void setUp() {
-        addressDTO = new AddressDTO();
+        addressDTO = new CreateAddressDTO();
     }
 
     @Test
@@ -34,8 +34,8 @@ class AddressDTOTest {
 
     @Test
     void testSetAndGetLocality() {
-        addressDTO.setLocality("Westlands");
-        assertEquals("Westlands", addressDTO.getLocality());
+        addressDTO.setLocalityArea("Westlands");
+        assertEquals("Westlands", addressDTO.getLocalityArea());
     }
 
     @Test
@@ -43,22 +43,22 @@ class AddressDTOTest {
         assertNull(addressDTO.getMapsPin());
         assertNull(addressDTO.getCounty());
         assertNull(addressDTO.getCountry());
-        assertNull(addressDTO.getLocality());
+        assertNull(addressDTO.getLocalityArea());
     }
 
     @Test
     void testEqualsAndHashCode() {
-        AddressDTO dto1 = new AddressDTO();
+        CreateAddressDTO dto1 = new CreateAddressDTO();
         dto1.setMapsPin("pin1");
         dto1.setCounty("Nairobi");
         dto1.setCountry("Kenya");
-        dto1.setLocality("Westlands");
+        dto1.setLocalityArea("Westlands");
 
-        AddressDTO dto2 = new AddressDTO();
+        CreateAddressDTO dto2 = new CreateAddressDTO();
         dto2.setMapsPin("pin1");
         dto2.setCounty("Nairobi");
         dto2.setCountry("Kenya");
-        dto2.setLocality("Westlands");
+        dto2.setLocalityArea("Westlands");
 
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
@@ -66,10 +66,10 @@ class AddressDTOTest {
 
     @Test
     void testNotEqualWhenFieldsDiffer() {
-        AddressDTO dto1 = new AddressDTO();
+        CreateAddressDTO dto1 = new CreateAddressDTO();
         dto1.setCountry("Kenya");
 
-        AddressDTO dto2 = new AddressDTO();
+        CreateAddressDTO dto2 = new CreateAddressDTO();
         dto2.setCountry("Uganda");
 
         assertNotEquals(dto1, dto2);
@@ -78,7 +78,7 @@ class AddressDTOTest {
     @Test
     void testToString() {
         addressDTO.setCountry("Kenya");
-        addressDTO.setLocality("Westlands");
+        addressDTO.setLocalityArea("Westlands");
         String result = addressDTO.toString();
         assertTrue(result.contains("Kenya"));
         assertTrue(result.contains("Westlands"));

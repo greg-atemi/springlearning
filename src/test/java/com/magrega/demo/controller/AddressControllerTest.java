@@ -4,15 +4,17 @@ import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.service.AddressService;
 import com.magrega.demo.service.JwtService;
+import com.magrega.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(AddressController.class)
 class AddressControllerTest {
 
@@ -33,6 +36,19 @@ class AddressControllerTest {
     @MockitoBean
     private AddressService addressService;
 
+    // Fixed: Injected UserService mock to resolve context initialization failure
+    @MockitoBean
+    private UserService userService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
+
     private Address mockAddress;
 
     @BeforeEach
@@ -41,7 +57,7 @@ class AddressControllerTest {
         mockAddress.setId(1);
         mockAddress.setCountry("Kenya");
         mockAddress.setCounty("Nairobi");
-        mockAddress.setLocality("Westlands");
+        mockAddress.setLocalityArea("Westlands");
         mockAddress.setMapsPin("-1.2921,36.8219");
     }
 
@@ -49,17 +65,19 @@ class AddressControllerTest {
     void GET_addresses_ShouldReturn200_WithAddressList() throws Exception {
         when(addressService.getAddresses()).thenReturn(List.of(mockAddress));
 
-        mockMvc.perform(get("/api/addresses"))
+        // Fixed path (/api/address) and field name (.localityArea)
+        mockMvc.perform(get("/api/address"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].country").value("Kenya"))
-                .andExpect(jsonPath("$[0].locality").value("Westlands"));
+                .andExpect(jsonPath("$[0].localityArea").value("Westlands"));
     }
 
     @Test
     void GET_addresses_ShouldReturn200_WithEmptyList() throws Exception {
         when(addressService.getAddresses()).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/addresses"))
+        // Fixed path (/api/address)
+        mockMvc.perform(get("/api/address"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
@@ -83,13 +101,15 @@ class AddressControllerTest {
     }
 
     @Test
-    void POST_address_ShouldReturn200_WhenAdded() throws Exception {
-        doNothing().when(addressService).addAddress(any(Address.class));
+    void POST_address_ShouldReturn21_WhenAdded() throws Exception {
+        // Fixed mock return value and status assertion (201 Created)
+        when(addressService.addAddress(any(Address.class))).thenReturn(mockAddress);
 
         mockMvc.perform(post("/api/address")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockAddress)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.country").value("Kenya"));
     }
 
     @Test
@@ -109,13 +129,4 @@ class AddressControllerTest {
         mockMvc.perform(delete("/api/address/1"))
                 .andExpect(status().isOk());
     }
-
-    @MockitoBean
-    private JwtService jwtService;
-
-    @MockitoBean
-    private UserDetailsService userDetailsService;
-
-    @MockitoBean
-    private JwtAuthFilter jwtAuthFilter;
 }

@@ -13,8 +13,8 @@ public class ProductDTO {
     private Integer categoryId;
     private BigDecimal price;
     private Date releaseDate;
-    private Boolean available;
-    private Integer quantity;
+    private Boolean isAvailable = false;
+    private Integer quantity = 0;
     private String imageUrl;
     private BigDecimal compareAtPrice;
     private Integer reviewCount;

@@ -23,8 +23,8 @@ class UpdateOrderStatusDTOTest {
 
     @Test
     void testSetAndGetOrderStatus() {
-        updateOrderStatusDTO.setOrderStatus(OrderStatus.PENDING);
-        assertEquals(OrderStatus.PENDING, updateOrderStatusDTO.getOrderStatus());
+        updateOrderStatusDTO.setOrderStatus(OrderStatus.PROCESSING);
+        assertEquals(OrderStatus.PROCESSING, updateOrderStatusDTO.getOrderStatus());
     }
 
     @Test
@@ -45,11 +45,11 @@ class UpdateOrderStatusDTOTest {
     void testEqualsAndHashCode() {
         UpdateOrderStatusDTO dto1 = new UpdateOrderStatusDTO();
         dto1.setOrderId(1);
-        dto1.setOrderStatus(OrderStatus.PENDING);
+        dto1.setOrderStatus(OrderStatus.PROCESSING);
 
         UpdateOrderStatusDTO dto2 = new UpdateOrderStatusDTO();
         dto2.setOrderId(1);
-        dto2.setOrderStatus(OrderStatus.PENDING);
+        dto2.setOrderStatus(OrderStatus.PROCESSING);
 
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
@@ -59,7 +59,7 @@ class UpdateOrderStatusDTOTest {
     void testNotEqualWhenStatusDiffers() {
         UpdateOrderStatusDTO dto1 = new UpdateOrderStatusDTO();
         dto1.setOrderId(1);
-        dto1.setOrderStatus(OrderStatus.PENDING);
+        dto1.setOrderStatus(OrderStatus.PROCESSING);
 
         UpdateOrderStatusDTO dto2 = new UpdateOrderStatusDTO();
         dto2.setOrderId(1);
@@ -71,9 +71,9 @@ class UpdateOrderStatusDTOTest {
     @Test
     void testToString() {
         updateOrderStatusDTO.setOrderId(99);
-        updateOrderStatusDTO.setOrderStatus(OrderStatus.PENDING);
+        updateOrderStatusDTO.setOrderStatus(OrderStatus.PROCESSING);
         String result = updateOrderStatusDTO.toString();
         assertTrue(result.contains("99"));
-        assertTrue(result.contains("PENDING"));
+        assertTrue(result.contains("PROCESSING"));
     }
 }

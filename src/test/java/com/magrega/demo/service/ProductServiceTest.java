@@ -50,7 +50,7 @@ class ProductServiceTest {
         mockProduct.setDescription("Flagship smartphone");
         mockProduct.setPrice(new BigDecimal("999.99"));
         mockProduct.setReleaseDate(new Date(2024 - 1900, 0, 17));   // Jan 17 2024
-        mockProduct.setAvailable(true);
+        mockProduct.setIsAvailable(true);
         mockProduct.setQuantity(50);
         mockProduct.setCategory(mockCategory);
 
@@ -60,7 +60,7 @@ class ProductServiceTest {
         mockProductDTO.setDescription("Flagship smartphone");
         mockProductDTO.setPrice(new BigDecimal("999.99"));
         mockProductDTO.setReleaseDate(new Date(2024 - 1900, 0, 17));
-        mockProductDTO.setAvailable(true);
+        mockProductDTO.setIsAvailable(true);
         mockProductDTO.setQuantity(50);
         mockProductDTO.setCategoryId(1);
     }
@@ -134,7 +134,7 @@ class ProductServiceTest {
                 savedProduct.getBrand().equals("Samsung") &&
                         savedProduct.getName().equals("Galaxy S24") &&
                         savedProduct.getCategory().getId() == 1 &&
-                        savedProduct.isAvailable() &&
+                        savedProduct.getIsAvailable() &&
                         savedProduct.getQuantity() == 50
         ));
     }

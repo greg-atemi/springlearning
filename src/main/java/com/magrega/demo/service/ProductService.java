@@ -5,7 +5,6 @@ import com.magrega.demo.model.Category;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import com.magrega.demo.model.Product;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class ProductService
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setReleaseDate(dto.getReleaseDate());
-        product.setAvailable(dto.getAvailable());
+        product.setIsAvailable(dto.getIsAvailable());
         product.setQuantity(dto.getQuantity());
         product.setReviewCount(dto.getReviewCount());
         product.setRating(dto.getRating());
@@ -87,7 +86,7 @@ public class ProductService
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setReleaseDate(dto.getReleaseDate());
-        product.setAvailable(dto.getAvailable());
+        product.setIsAvailable(dto.getIsAvailable());
         product.setQuantity(dto.getQuantity());
         product.setReviewCount(dto.getReviewCount());
         product.setRating(dto.getRating());
@@ -109,7 +108,7 @@ public class ProductService
         if (dto.getName()         != null) product.setName(dto.getName());
         if (dto.getDescription()  != null) product.setDescription(dto.getDescription());
         if (dto.getPrice()        != null) product.setPrice(dto.getPrice());
-        if (dto.getAvailable()    != null) product.setAvailable(dto.getAvailable());
+        if (dto.getIsAvailable()    != null) product.setIsAvailable(dto.getIsAvailable());
         if (dto.getQuantity()     != null) product.setQuantity(dto.getQuantity());
         if (dto.getImageUrl()     != null) product.setImageUrl(dto.getImageUrl());
         if (dto.getCompareAtPrice() != null) product.setCompareAtPrice(dto.getCompareAtPrice());

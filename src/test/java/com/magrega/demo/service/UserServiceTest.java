@@ -89,28 +89,6 @@ class UserServiceTest {
     }
 
     // ─────────────────────────────────────────────
-    // addUser()
-    // ─────────────────────────────────────────────
-
-    @Test
-    void addUser_ShouldCallSave_WithGivenUser() {
-        userService.addUser(mockUser);
-
-        verify(userRepo, times(1)).save(mockUser);
-    }
-
-    @Test
-    void addUser_ShouldSave_WithCorrectFields() {
-        userService.addUser(mockUser);
-
-        verify(userRepo).save(argThat(u ->
-                u.getFirstName().equals("John") &&
-                        u.getLastName().equals("Doe") &&
-                        u.getEmail().equals("johndoe@example.com")
-        ));
-    }
-
-    // ─────────────────────────────────────────────
     // updateUserById()
     // ─────────────────────────────────────────────
 

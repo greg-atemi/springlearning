@@ -7,6 +7,7 @@ import com.magrega.demo.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CategoryController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class CategoryControllerTest {
 
     @Autowired
@@ -46,7 +48,7 @@ class CategoryControllerTest {
     void GET_categories_ShouldReturn200_WithCategoryList() throws Exception {
         when(categoryService.getCategories()).thenReturn(List.of(mockCategory));
 
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/category"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Electronics"));
     }
@@ -55,7 +57,7 @@ class CategoryControllerTest {
     void GET_categories_ShouldReturn200_WithEmptyList() throws Exception {
         when(categoryService.getCategories()).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/category"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }

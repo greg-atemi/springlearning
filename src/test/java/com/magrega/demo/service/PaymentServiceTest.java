@@ -181,7 +181,7 @@ class PaymentServiceTest {
 
         assertThatThrownBy(() -> paymentService.createPayment(mockCreateDTO))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Payment not equal to order amount");
+                .hasMessage("Payment amount does not match order total");
 
         verify(paymentRepo, never()).save(any());
     }

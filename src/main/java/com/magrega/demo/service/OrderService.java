@@ -56,31 +56,37 @@ public class OrderService
         order.setUser(user);
         order.setAddress(address);
 
-        Order savedOrder = orderRepo.save(order);
+        BigDecimal total = BigDecimal.ZERO;
 
-        // Process items
         if (request.getItems() != null) {
+
             for (CreateOrderItemDTO itemDTO : request.getItems()) {
+
                 Product product = productRepo.findById(itemDTO.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Product not found: " + itemDTO.getProductId()));
+                        .orElseThrow(() ->
+                                new RuntimeException("Product not found: " + itemDTO.getProductId()));
 
                 OrderItem orderItem = new OrderItem();
+
                 orderItem.setProduct(product);
                 orderItem.setQuantity(itemDTO.getQuantity());
                 orderItem.setUnitPrice(product.getPrice());
-                orderItem.setSubTotal(product.getPrice().multiply(BigDecimal.valueOf(itemDTO.getQuantity())));
 
-                savedOrder.addItem(orderItem);
+                BigDecimal subtotal =
+                        product.getPrice()
+                                .multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
+
+                orderItem.setSubTotal(subtotal);
+
+                order.addItem(orderItem);
+
+                total = total.add(subtotal);
             }
-
-            // Recalculate total
-            BigDecimal total = savedOrder.getItems().stream()
-                    .map(OrderItem::getSubTotal)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            savedOrder.setTotalAmount(total);
         }
 
-        return orderRepo.save(savedOrder);
+        order.setTotalAmount(total);
+
+        return orderRepo.save(order);
     }
 
     public Order updateOrderById(Integer id, CreateOrderDTO request) {
@@ -123,35 +129,34 @@ public class OrderService
         System.out.println("NEW ORDER STATUS: " + newOrderStatus);
         System.out.println("---------------------");
 
-        switch (newOrderStatus) {
-            case PROCESSING:
-                if (currentOrderStatus == OrderStatus.PROCESSING) {
-                    throw new RuntimeException("Order already PROCESSING");
+        order.setOrderStatus(
+                switch (newOrderStatus) {
+                    case PROCESSING -> {
+                        if (currentOrderStatus == OrderStatus.PROCESSING) {
+                            throw new RuntimeException("Order already PROCESSING");
+                        }
+                        yield OrderStatus.PROCESSING;
+                    }
+                    case SHIPPED -> {
+                        if (currentOrderStatus == OrderStatus.SHIPPED) {
+                            throw new RuntimeException("Order already Shipped");
+                        }
+                        yield OrderStatus.SHIPPED;
+                    }
+                    case DELIVERED -> {
+                        if (currentOrderStatus == OrderStatus.DELIVERED) {
+                            throw new RuntimeException("Order already Delivered");
+                        }
+                        yield OrderStatus.DELIVERED;
+                    }
+                    case CANCELLED -> {
+                        if (currentOrderStatus == OrderStatus.CANCELLED) {
+                            throw new RuntimeException("Order already cancelled");
+                        }
+                        yield OrderStatus.CANCELLED;
+                    }
                 }
-                order.setOrderStatus(OrderStatus.PROCESSING);
-                break;
-
-            case SHIPPED:
-                if (currentOrderStatus == OrderStatus.SHIPPED) {
-                    throw new RuntimeException("Order already Shipped");
-                }
-                order.setOrderStatus(OrderStatus.SHIPPED);
-                break;
-
-            case DELIVERED:
-                if (currentOrderStatus == OrderStatus.DELIVERED) {
-                    throw new RuntimeException("Order already Delivered");
-                }
-                order.setOrderStatus(OrderStatus.DELIVERED);
-                break;
-
-            case CANCELLED:
-                if (currentOrderStatus == OrderStatus.CANCELLED) {
-                    throw new RuntimeException("Order already cancelled");
-                }
-                order.setOrderStatus(OrderStatus.CANCELLED);
-                break;
-        }
+        );
 
         return orderRepo.save(order);
     }

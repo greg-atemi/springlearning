@@ -57,20 +57,20 @@ class ProductDTOTest {
 
     @Test
     void testAvailableDefaultIsFalse() {
-        assertFalse(productDTO.isAvailable());
+        assertFalse(productDTO.getIsAvailable());
     }
 
     @Test
     void testSetAvailableToTrue() {
-        productDTO.setAvailable(true);
-        assertTrue(productDTO.isAvailable());
+        productDTO.setIsAvailable(true);
+        assertTrue(productDTO.getIsAvailable());
     }
 
     @Test
     void testSetAvailableToFalse() {
-        productDTO.setAvailable(true);
-        productDTO.setAvailable(false);
-        assertFalse(productDTO.isAvailable());
+        productDTO.setIsAvailable(true);
+        productDTO.setIsAvailable(false);
+        assertFalse(productDTO.getIsAvailable());
     }
 
     @Test
@@ -102,7 +102,7 @@ class ProductDTOTest {
         dto1.setBrand("Apple");
         dto1.setName("iPhone 16");
         dto1.setPrice(new BigDecimal("120000.00"));
-        dto1.setAvailable(true);
+        dto1.setIsAvailable(true);
         dto1.setQuantity(50);
         dto1.setReleaseDate(date);
 
@@ -110,7 +110,7 @@ class ProductDTOTest {
         dto2.setBrand("Apple");
         dto2.setName("iPhone 16");
         dto2.setPrice(new BigDecimal("120000.00"));
-        dto2.setAvailable(true);
+        dto2.setIsAvailable(true);
         dto2.setQuantity(50);
         dto2.setReleaseDate(date);
 

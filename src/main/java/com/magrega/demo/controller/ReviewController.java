@@ -41,16 +41,4 @@ public class ReviewController
     {
         service.createReview(review);
     }
-
-//    @DeleteMapping("/category/{id}")
-//    public void deleteCategory(@PathVariable int id)
-//    {
-//        service.deleteCategoryById(id);
-//    }
-
-//    @PutMapping("/category")
-//    public void updateCategory(@RequestBody Category category)
-//    {
-//        service.updateCategoryById(category);
-//    }
 }

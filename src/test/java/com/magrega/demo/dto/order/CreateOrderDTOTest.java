@@ -19,7 +19,10 @@ class CreateOrderDTOTest {
     @Test
     void testSetAndGetUserId() {
         createOrderDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-        assertEquals(42, createOrderDTO.getUserId());
+        assertEquals(
+                UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                createOrderDTO.getUserId()
+        );
     }
 
     @Test
@@ -52,9 +55,11 @@ class CreateOrderDTOTest {
     void testNotEqualWhenFieldsDiffer() {
         CreateOrderDTO dto1 = new CreateOrderDTO();
         dto1.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        dto1.setAddressId(10);
 
         CreateOrderDTO dto2 = new CreateOrderDTO();
         dto2.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        dto1.setAddressId(20);
 
         assertNotEquals(dto1, dto2);
     }
@@ -64,7 +69,7 @@ class CreateOrderDTOTest {
         createOrderDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         createOrderDTO.setAddressId(3);
         String result = createOrderDTO.toString();
-        assertTrue(result.contains("5"));
+        assertTrue(result.contains("00000000-0000-0000-0000-000000000001"));
         assertTrue(result.contains("3"));
     }
 }

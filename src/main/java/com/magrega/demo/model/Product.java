@@ -28,7 +28,7 @@ public class Product
     private BigDecimal price;
     private BigDecimal compareAtPrice;
     private Date releaseDate;
-    private Boolean available;
+    private Boolean isAvailable;
     private Integer quantity;
     private Integer reviewCount;
     private BigDecimal rating;
