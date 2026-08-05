@@ -41,10 +41,16 @@ public class PaymentService
         return paymentRepo.findById(id).orElse(null);
     }
 
+    @Transactional
     public Payment createPayment(CreatePaymentDTO request) {
 
         Order order = orderRepo.findById(request.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 🚫 Prevent duplicate payment
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new RuntimeException("Order already paid");
+        }
 
         Payment payment = new Payment();
         payment.setOrder(order);
@@ -53,16 +59,23 @@ public class PaymentService
         BigDecimal requestAmount = request.getAmount();
 
         if (requestAmount.compareTo(order.getTotalAmount()) != 0) {
-            System.out.println("Request amount: " + requestAmount);
-            System.out.println("Order amount: " + order.getTotalAmount());
-            throw new RuntimeException("Payment not equal to order amount");
+            throw new RuntimeException("Payment amount does not match order total");
         }
 
         payment.setAmount(requestAmount);
         payment.setTransactionReference(request.getTransactionReference());
         payment.setPaidAt(LocalDateTime.now());
 
-        return paymentRepo.save(payment);
+        paymentRepo.save(payment);
+
+        // ✅ Mark order as PAID
+        order.setPaymentStatus(PaymentStatus.PAID);
+        orderRepo.save(order);
+
+        // ✅ Reduce stock
+        reduceInventory(order);
+
+        return payment;
     }
 
     public void reduceInventory(Order order) {

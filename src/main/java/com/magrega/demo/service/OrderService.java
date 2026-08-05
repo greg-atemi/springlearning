@@ -2,6 +2,7 @@ package com.magrega.demo.service;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
 import com.magrega.demo.dto.order.UpdateOrderStatusDTO;
+import com.magrega.demo.dto.orderItem.CreateOrderItemDTO;
 import com.magrega.demo.model.*;
 import com.magrega.demo.model.enums.OrderStatus;
 import com.magrega.demo.model.enums.PaymentStatus;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService
@@ -48,11 +50,41 @@ public class OrderService
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
         Order order = new Order();
-        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         order.setPaymentStatus(PaymentStatus.PENDING);
         order.setTotalAmount(BigDecimal.ZERO);
         order.setUser(user);
         order.setAddress(address);
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        if (request.getItems() != null) {
+
+            for (CreateOrderItemDTO itemDTO : request.getItems()) {
+
+                Product product = productRepo.findById(itemDTO.getProductId())
+                        .orElseThrow(() ->
+                                new RuntimeException("Product not found: " + itemDTO.getProductId()));
+
+                OrderItem orderItem = new OrderItem();
+
+                orderItem.setProduct(product);
+                orderItem.setQuantity(itemDTO.getQuantity());
+                orderItem.setUnitPrice(product.getPrice());
+
+                BigDecimal subtotal =
+                        product.getPrice()
+                                .multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
+
+                orderItem.setSubTotal(subtotal);
+
+                order.addItem(orderItem);
+
+                total = total.add(subtotal);
+            }
+        }
+
+        order.setTotalAmount(total);
 
         return orderRepo.save(order);
     }
@@ -61,18 +93,6 @@ public class OrderService
 
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-
-//        if (request.getTotalAmount() != null) {
-//            order.setTotalAmount(request.getTotalAmount());
-//        }
-//
-//        if (request.getOrderStatus() != null) {
-//            order.setOrderStatus(request.getOrderStatus());
-//        }
-//
-//        if (request.getPaymentStatus() != null) {
-//            order.setPaymentStatus(request.getPaymentStatus());
-//        }
 
         if (request.getUserId() != null) {
             User user = userRepo.findById(request.getUserId())
@@ -109,36 +129,43 @@ public class OrderService
         System.out.println("NEW ORDER STATUS: " + newOrderStatus);
         System.out.println("---------------------");
 
-        switch (newOrderStatus) {
-            case PENDING:
-                if (currentOrderStatus == OrderStatus.PENDING) {
-                    throw new RuntimeException("Order already Pending");
+        order.setOrderStatus(
+                switch (newOrderStatus) {
+                    case PROCESSING -> {
+                        if (currentOrderStatus == OrderStatus.PROCESSING) {
+                            throw new RuntimeException("Order already PROCESSING");
+                        }
+                        yield OrderStatus.PROCESSING;
+                    }
+                    case SHIPPED -> {
+                        if (currentOrderStatus == OrderStatus.SHIPPED) {
+                            throw new RuntimeException("Order already Shipped");
+                        }
+                        yield OrderStatus.SHIPPED;
+                    }
+                    case DELIVERED -> {
+                        if (currentOrderStatus == OrderStatus.DELIVERED) {
+                            throw new RuntimeException("Order already Delivered");
+                        }
+                        yield OrderStatus.DELIVERED;
+                    }
+                    case CANCELLED -> {
+                        if (currentOrderStatus == OrderStatus.CANCELLED) {
+                            throw new RuntimeException("Order already cancelled");
+                        }
+                        yield OrderStatus.CANCELLED;
+                    }
                 }
-                order.setOrderStatus(OrderStatus.PENDING);
-                break;
+        );
 
-            case SHIPPED:
-                if (currentOrderStatus == OrderStatus.SHIPPED) {
-                    throw new RuntimeException("Order already Shipped");
-                }
-                order.setOrderStatus(OrderStatus.SHIPPED);
-                break;
+        return orderRepo.save(order);
+    }
 
-            case DELIVERED:
-                if (currentOrderStatus == OrderStatus.DELIVERED) {
-                    throw new RuntimeException("Order already Delivered");
-                }
-                order.setOrderStatus(OrderStatus.DELIVERED);
-                break;
+    public List<Order> getOrdersByUserId(UUID userId) {
+        return orderRepo.findByUserId(userId);
+    }
 
-            case CANCELLED:
-                if (currentOrderStatus == OrderStatus.CANCELLED) {
-                    throw new RuntimeException("Order already cancelled");
-                }
-                order.setOrderStatus(OrderStatus.CANCELLED);
-                break;
-        }
-
+    public Order saveOrder(Order order) {
         return orderRepo.save(order);
     }
 }

@@ -1,6 +1,5 @@
 package com.magrega.demo.service;
 
-import com.magrega.demo.dto.address.AddressDTO;
 import com.magrega.demo.model.Address;
 import com.magrega.demo.model.User;
 import com.magrega.demo.repository.AddressRepo;
@@ -9,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class AddressService
-{
+public class AddressService {
+
     @Autowired
     private AddressRepo addressRepo;
 
@@ -29,14 +29,12 @@ public class AddressService
         return addressRepo.findById(id).orElse(null);
     }
 
-    public void addAddress(Address Address)
-    {
-        addressRepo.save(Address);
+    public Address addAddress(Address address) {
+        return addressRepo.save(address);
     }
 
-    public void updateAddressById(Address Address)
-    {
-        addressRepo.save(Address);
+    public void updateAddressById(Address address) {
+        addressRepo.save(address);
     }
 
     public void deleteAddressById(int id) {
@@ -46,22 +44,20 @@ public class AddressService
         addressRepo.deleteById(id);
     }
 
-    public Address addAddressToUser(Integer userId, AddressDTO dto) {
-
+    public Address assignAddressToUser(UUID userId, Long addressId) {
         User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        Address address = new Address();
-        address.setCountry(dto.getCountry());
-        address.setCounty(dto.getCounty());
-        address.setLocality(dto.getLocality());
-        address.setMapsPin(dto.getMapsPin());
+        Address address = addressRepo.findById(Math.toIntExact(addressId))
+                .orElseThrow(() -> new RuntimeException("Address not found with id: " + addressId));
 
         address.setUser(user);
-
         user.getAddressList().add(address);
 
         return addressRepo.save(address);
     }
 
+    public List<Address> getAddressesByUserId(UUID userId) {
+        return addressRepo.findByUserId(userId);
+    }
 }

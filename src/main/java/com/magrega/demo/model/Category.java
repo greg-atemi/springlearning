@@ -1,12 +1,9 @@
 package com.magrega.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +21,7 @@ public class Category {
     private Integer id;
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore  // ← completely hide productList from all responses
     private List<Product> productList;
 }

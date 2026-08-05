@@ -16,9 +16,10 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String mapsPin;
+    private String cityTown;
     private String county;
     private String country;
-    private String locality;
+    private String localityArea;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

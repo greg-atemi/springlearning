@@ -1,12 +1,16 @@
 package com.magrega.demo.controller;
 
+import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Category;
 import com.magrega.demo.service.CategoryService;
+import com.magrega.demo.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -19,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CategoryController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class CategoryControllerTest {
 
     @Autowired
@@ -43,7 +48,7 @@ class CategoryControllerTest {
     void GET_categories_ShouldReturn200_WithCategoryList() throws Exception {
         when(categoryService.getCategories()).thenReturn(List.of(mockCategory));
 
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/category"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Electronics"));
     }
@@ -52,7 +57,7 @@ class CategoryControllerTest {
     void GET_categories_ShouldReturn200_WithEmptyList() throws Exception {
         when(categoryService.getCategories()).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/category"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
@@ -101,4 +106,13 @@ class CategoryControllerTest {
         mockMvc.perform(delete("/api/category/1"))
                 .andExpect(status().isOk());
     }
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
 }

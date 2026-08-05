@@ -6,8 +6,12 @@ import com.magrega.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @CrossOrigin
@@ -19,11 +23,27 @@ public class ProductController
     ProductService service;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    @Operation(summary = "Get all products", description = "Returns a paginated list of all products")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Products retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+
+        if (search != null || category != null || minPrice != null || maxPrice != null) {
+            return new ResponseEntity<>(
+                    service.searchProducts(search, category, minPrice, maxPrice),
+                    HttpStatus.OK
+            );
+        }
         return new ResponseEntity<>(service.getProducts(), HttpStatus.OK);
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable int id)
     {
         Product product = service.getProductById(id);
@@ -37,20 +57,20 @@ public class ProductController
         }
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public void deleteProductById(@PathVariable int id)
     {
         service.deleteProductById(id);
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<?> addProduct(@RequestBody ProductDTO dto)
     {
         service.addProduct(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public void updateProduct(@RequestBody Product product)
     {
         service.updateProduct(product);

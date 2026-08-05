@@ -1,6 +1,6 @@
 package com.magrega.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,17 +20,21 @@ public class Product
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String brand;
     private String name;
+    private String imageUrl;
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    @JsonBackReference
-    private Category category;
-
     private BigDecimal price;
+    private BigDecimal compareAtPrice;
     private Date releaseDate;
-    private boolean available;
-    private int quantity;
+    private Boolean isAvailable;
+    private Integer quantity;
+    private Integer reviewCount;
+    private BigDecimal rating;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties("products") // ← prevents infinite loop without hiding category
+    private Category category;
 }

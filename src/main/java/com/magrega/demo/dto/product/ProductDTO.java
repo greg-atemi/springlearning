@@ -10,11 +10,13 @@ public class ProductDTO {
     private String brand;
     private String name;
     private String description;
-
     private Integer categoryId;
-
     private BigDecimal price;
     private Date releaseDate;
-    private boolean available;
-    private int quantity;
+    private Boolean isAvailable = false;
+    private Integer quantity = 0;
+    private String imageUrl;
+    private BigDecimal compareAtPrice;
+    private Integer reviewCount;
+    private BigDecimal rating;
 }

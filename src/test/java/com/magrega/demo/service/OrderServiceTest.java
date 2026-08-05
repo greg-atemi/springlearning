@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +55,7 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         mockUser = new User();
-        mockUser.setId(1);
+        mockUser.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockUser.setFirstName("Greg");
         mockUser.setLastName("Atemi");
         mockUser.setEmail("greg@systechafrica.com");
@@ -64,7 +65,7 @@ class OrderServiceTest {
         mockAddress.setId(1);
         mockAddress.setCountry("Kenya");
         mockAddress.setCounty("Nairobi");
-        mockAddress.setLocality("Westlands");
+        mockAddress.setLocalityArea("Westlands");
         mockAddress.setUser(mockUser);
 
         mockOrder = new Order();
@@ -72,12 +73,12 @@ class OrderServiceTest {
         mockOrder.setUser(mockUser);
         mockOrder.setAddress(mockAddress);
         mockOrder.setTotalAmount(BigDecimal.ZERO);
-        mockOrder.setOrderStatus(OrderStatus.PENDING);
+        mockOrder.setOrderStatus(OrderStatus.PROCESSING);
         mockOrder.setPaymentStatus(PaymentStatus.PENDING);
         mockOrder.setItems(new ArrayList<>());
 
         mockCreateDTO = new CreateOrderDTO();
-        mockCreateDTO.setUserId(1);
+        mockCreateDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockCreateDTO.setAddressId(1);
 
         mockUpdateStatusDTO = new UpdateOrderStatusDTO();
@@ -96,7 +97,7 @@ class OrderServiceTest {
         List<Order> result = orderService.getOrders();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getOrderStatus()).isEqualTo(OrderStatus.PENDING);
+        assertThat(result.get(0).getOrderStatus()).isEqualTo(OrderStatus.PROCESSING);
         verify(orderRepo, times(1)).findAll();
     }
 
@@ -141,14 +142,14 @@ class OrderServiceTest {
 
     @Test
     void createOrder_ShouldCreateAndReturnOrder_WhenValid() {
-        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
         when(addressRepo.findById(1)).thenReturn(Optional.of(mockAddress));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Order result = orderService.createOrder(mockCreateDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PENDING);
+        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PROCESSING);
         assertThat(result.getPaymentStatus()).isEqualTo(PaymentStatus.PENDING);
         assertThat(result.getTotalAmount()).isEqualByComparingTo(BigDecimal.ZERO);
         verify(orderRepo, times(1)).save(any(Order.class));
@@ -156,7 +157,7 @@ class OrderServiceTest {
 
     @Test
     void createOrder_ShouldLinkUserAndAddress() {
-        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
         when(addressRepo.findById(1)).thenReturn(Optional.of(mockAddress));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -168,8 +169,8 @@ class OrderServiceTest {
 
     @Test
     void createOrder_ShouldThrow_WhenUserNotFound() {
-        when(userRepo.findById(99)).thenReturn(Optional.empty());
-        mockCreateDTO.setUserId(99);
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.empty());
+        mockCreateDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 
         assertThatThrownBy(() -> orderService.createOrder(mockCreateDTO))
                 .isInstanceOf(RuntimeException.class)
@@ -181,7 +182,7 @@ class OrderServiceTest {
 
     @Test
     void createOrder_ShouldThrow_WhenAddressNotFound() {
-        when(userRepo.findById(1)).thenReturn(Optional.of(mockUser));
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(mockUser));
         when(addressRepo.findById(99)).thenReturn(Optional.empty());
         mockCreateDTO.setAddressId(99);
 
@@ -199,29 +200,29 @@ class OrderServiceTest {
     @Test
     void updateOrderById_ShouldUpdateUser_WhenUserIdProvided() {
         User newUser = new User();
-        newUser.setId(2);
+        newUser.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         newUser.setFirstName("Jane");
         newUser.setEmail("jane@systechafrica.com");
         newUser.setAddressList(new ArrayList<>());
 
-        mockCreateDTO.setUserId(2);
+        mockCreateDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockCreateDTO.setAddressId(null);
 
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
-        when(userRepo.findById(2)).thenReturn(Optional.of(newUser));
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.of(newUser));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Order result = orderService.updateOrderById(1, mockCreateDTO);
 
         assertThat(result.getUser()).isEqualTo(newUser);
-        verify(userRepo, times(1)).findById(2);
+        verify(userRepo, times(1)).findById(UUID.fromString("00000000-0000-0000-0000-000000000001"));
     }
 
     @Test
     void updateOrderById_ShouldUpdateAddress_WhenAddressIdProvided() {
         Address newAddress = new Address();
         newAddress.setId(2);
-        newAddress.setLocality("Kilimani");
+        newAddress.setLocalityArea("Kilimani");
 
         mockCreateDTO.setUserId(null);
         mockCreateDTO.setAddressId(2);
@@ -265,9 +266,9 @@ class OrderServiceTest {
 
     @Test
     void updateOrderById_ShouldThrow_WhenNewUserNotFound() {
-        mockCreateDTO.setUserId(99);
+        mockCreateDTO.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
-        when(userRepo.findById(99)).thenReturn(Optional.empty());
+        when(userRepo.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.updateOrderById(1, mockCreateDTO))
                 .isInstanceOf(RuntimeException.class)
@@ -319,8 +320,8 @@ class OrderServiceTest {
     // ─────────────────────────────────────────────
 
     @Test
-    void updateOrderStatus_ShouldSetShipped_WhenCurrentIsPending() {
-        mockOrder.setOrderStatus(OrderStatus.PENDING);
+    void updateOrderStatus_ShouldSetShipped_WhenCurrentIsProcessing() {
+        mockOrder.setOrderStatus(OrderStatus.PROCESSING);
         mockUpdateStatusDTO.setOrderStatus(OrderStatus.SHIPPED);
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -344,7 +345,7 @@ class OrderServiceTest {
 
     @Test
     void updateOrderStatus_ShouldSetCancelled_WhenCurrentIsPending() {
-        mockOrder.setOrderStatus(OrderStatus.PENDING);
+        mockOrder.setOrderStatus(OrderStatus.PROCESSING);
         mockUpdateStatusDTO.setOrderStatus(OrderStatus.CANCELLED);
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -357,24 +358,24 @@ class OrderServiceTest {
     @Test
     void updateOrderStatus_ShouldSetPending_WhenCurrentIsShipped() {
         mockOrder.setOrderStatus(OrderStatus.SHIPPED);
-        mockUpdateStatusDTO.setOrderStatus(OrderStatus.PENDING);
+        mockUpdateStatusDTO.setOrderStatus(OrderStatus.PROCESSING);
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
         when(orderRepo.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Order result = orderService.updateOrderStatus(mockUpdateStatusDTO);
 
-        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PENDING);
+        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PROCESSING);
     }
 
     @Test
-    void updateOrderStatus_ShouldThrow_WhenAlreadyPending() {
-        mockOrder.setOrderStatus(OrderStatus.PENDING);
-        mockUpdateStatusDTO.setOrderStatus(OrderStatus.PENDING);
+    void updateOrderStatus_ShouldThrow_WhenAlreadyProcessing() {
+        mockOrder.setOrderStatus(OrderStatus.PROCESSING);
+        mockUpdateStatusDTO.setOrderStatus(OrderStatus.PROCESSING);
         when(orderRepo.findById(1)).thenReturn(Optional.of(mockOrder));
 
         assertThatThrownBy(() -> orderService.updateOrderStatus(mockUpdateStatusDTO))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Order already Pending");
+                .hasMessage("Order already PROCESSING");
 
         verify(orderRepo, never()).save(any());
     }

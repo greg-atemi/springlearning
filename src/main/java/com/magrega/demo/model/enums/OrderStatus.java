@@ -1,7 +1,7 @@
 package com.magrega.demo.model.enums;
 
 public enum OrderStatus {
-    PENDING,
+    PROCESSING,
     SHIPPED,
     DELIVERED,
     CANCELLED

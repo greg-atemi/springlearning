@@ -1,26 +1,41 @@
 package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.review.CreateReviewDTO;
+import com.magrega.demo.filter.JwtAuthFilter;
 import com.magrega.demo.model.Review;
+import com.magrega.demo.service.JwtService;
 import com.magrega.demo.service.ReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ReviewController.class)
 class ReviewControllerTest {
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +57,7 @@ class ReviewControllerTest {
         mockReview.setComment("Excellent phone!");
 
         mockRequest = new CreateReviewDTO();
-        mockRequest.setUserId(1);
+        mockRequest.setUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         mockRequest.setProductId(1);
         mockRequest.setRating(5);
         mockRequest.setComment("Excellent phone!");
