@@ -102,7 +102,6 @@ class AddressControllerTest {
 
     @Test
     void POST_address_ShouldReturn21_WhenAdded() throws Exception {
-        // Fixed mock return value and status assertion (201 Created)
         when(addressService.addAddress(any(Address.class))).thenReturn(mockAddress);
 
         mockMvc.perform(post("/api/address")
