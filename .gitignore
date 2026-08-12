@@ -26,5 +26,8 @@ replay_pid*
 #IntelliJ idea files
 .idea
 
+# Build files
+target
+
 #DevOps
 .env

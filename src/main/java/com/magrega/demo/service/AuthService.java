@@ -3,6 +3,7 @@ package com.magrega.demo.service;
 import com.magrega.demo.dto.user.LoginUserDTO;
 import com.magrega.demo.dto.user.RegisterUserDTO;
 import com.magrega.demo.dto.response.AuthResponse;
+import com.magrega.demo.exception.EmailAlreadyExistsException;
 import com.magrega.demo.model.User;
 import com.magrega.demo.model.enums.Role;
 import com.magrega.demo.repository.UserRepo;
@@ -22,6 +23,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterUserDTO request) {
+
+        if (userRepo.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException(
+                    "An account with this email already exists."
+            );
+        }
+
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
