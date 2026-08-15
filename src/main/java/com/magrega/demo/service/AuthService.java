@@ -37,6 +37,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
                 .role(Role.USER)
+                .isActive(true)
                 .build();
         user = userRepo.save(user);                    // save first, get ID back
         String token = jwtService.generateToken(user); // then generate token

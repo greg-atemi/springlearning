@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,6 +39,10 @@ public class User implements UserDetails {
 
     private String firstName;
     private String lastName;
+
+    @ColumnDefault("true")
+    @Column(nullable = false)
+    private boolean isActive;
 
     @Column(unique = true, nullable = false)
     private String email;
