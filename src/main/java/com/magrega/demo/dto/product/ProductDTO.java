@@ -3,6 +3,7 @@ package com.magrega.demo.dto.product;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 public class ProductDTO {
@@ -10,7 +11,7 @@ public class ProductDTO {
     private String brand;
     private String name;
     private String description;
-    private Integer categoryId;
+    private Set<Integer> categoryIds;
     private BigDecimal price;
     private Date releaseDate;
     private Boolean isAvailable = false;

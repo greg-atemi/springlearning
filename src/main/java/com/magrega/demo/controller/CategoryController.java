@@ -26,31 +26,10 @@ public class CategoryController
     public ResponseEntity<Category> getCategoryById(@PathVariable int id)
     {
         Category category = service.getCategoryById(id);
-
-        if (category != null)
-        {
+        if (category != null) {
             return new ResponseEntity<>(category, HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @DeleteMapping("/category/{id}")
-    public void deleteCategory(@PathVariable int id)
-    {
-        service.deleteCategoryById(id);
-    }
-
-    @PostMapping("/category")
-    public void addCategory(@RequestBody Category category)
-    {
-        service.addCategory(category);
-    }
-
-    @PutMapping("/category")
-    public void updateCategory(@RequestBody Category category)
-    {
-        service.updateCategoryById(category);
     }
 }

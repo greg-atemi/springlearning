@@ -13,11 +13,12 @@ import java.util.List;
 public interface ProductRepo extends JpaRepository<Product, Integer> {
 
     @Query("""
-        SELECT p FROM Product p
+        SELECT DISTINCT p FROM Product p
+        LEFT JOIN p.categories cat
         WHERE
           (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
                            OR LOWER(p.brand) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
-          AND (:category IS NULL OR p.category.name = CAST(:category AS string))
+          AND (:category IS NULL OR cat.name = CAST(:category AS string))
           AND (:minPrice IS NULL OR p.price >= :minPrice)
           AND (:maxPrice IS NULL OR p.price <= :maxPrice)
     """)

@@ -9,14 +9,16 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Component
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product
-{
+public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,8 +35,12 @@ public class Product
     private Integer reviewCount;
     private BigDecimal rating;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties("products") // ← prevents infinite loop without hiding category
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @JsonIgnoreProperties("productList")
+    private Set<Category> categories = new HashSet<>();
 }
