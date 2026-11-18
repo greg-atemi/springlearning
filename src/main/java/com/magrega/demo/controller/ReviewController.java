@@ -1,44 +1,38 @@
 package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.review.CreateReviewDTO;
-import com.magrega.demo.model.Review;
+import com.magrega.demo.dto.review.ReviewsResponse;
+import com.magrega.demo.dto.review.ReviewResponse;
+import com.magrega.demo.model.User;
+import com.magrega.demo.repository.UserRepo;
 import com.magrega.demo.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api")
-public class ReviewController
-{
-    @Autowired
-    ReviewService service;
+@RequestMapping("/api/products/{productId}/reviews")
+@RequiredArgsConstructor
+public class ReviewController {
 
-    @GetMapping("/review")
-    public ResponseEntity<List<Review>> getReviews(){
-        return new ResponseEntity<>(service.getReviews(), HttpStatus.OK);
+    private final ReviewService service;
+    private final UserRepo userRepository;
+
+    @GetMapping
+    public ReviewsResponse list(@PathVariable Integer productId) {
+        return service.getForProduct(productId);
     }
 
-    @GetMapping("/review/{id}")
-    public ResponseEntity<Review> getReviewById(@PathVariable int id)
-    {
-        Review review = service.getReviewById(id);
-
-        if (review != null)
-        {
-            return new ResponseEntity<>(review, HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/review")
-    public void createReview(@RequestBody CreateReviewDTO review)
-    {
-        service.createReview(review);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ReviewResponse create(@PathVariable Integer productId,
+                                 @Valid @RequestBody CreateReviewDTO body,
+                                 Authentication auth) {
+        User user = userRepository.findByEmail(auth.getName())   // match how your JWT filter identifies users
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        return service.create(productId, user, body);
     }
 }

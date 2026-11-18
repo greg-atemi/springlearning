@@ -1,15 +1,10 @@
 package com.magrega.demo.dto.review;
 
-import com.magrega.demo.model.Product;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import lombok.Data;
-
-import java.util.UUID;
-
-@Data
-public class CreateReviewDTO {
-    private UUID userId;
-    private Integer productId;
-    private Integer rating;
-    private String comment;
-}
+public record CreateReviewDTO(
+        @NotNull @Min(1) @Max(5) Integer rating,
+        @Size(max = 2000) String comment) {}

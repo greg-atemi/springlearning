@@ -1,33 +1,40 @@
 package com.magrega.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-@Data
-@Component
 @Entity
-@AllArgsConstructor
+@Table(name = "reviews",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
+@Getter
+@Setter
 @NoArgsConstructor
-public class Review
-{
+public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(nullable = false)
     private Integer rating;
+
+    @Column(length = 2000)
     private String comment;
-    private LocalDateTime commentedAt;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Instant createdAt;
 }

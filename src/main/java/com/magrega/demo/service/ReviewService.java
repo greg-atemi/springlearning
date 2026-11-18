@@ -1,62 +1,51 @@
 package com.magrega.demo.service;
 
 import com.magrega.demo.dto.review.CreateReviewDTO;
+import com.magrega.demo.dto.review.ReviewsResponse;
+import com.magrega.demo.dto.review.ReviewResponse;
 import com.magrega.demo.model.*;
 import com.magrega.demo.repository.ProductRepo;
 import com.magrega.demo.repository.ReviewRepo;
-import com.magrega.demo.repository.UserRepo;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-@Getter
 @Service
-public class ReviewService
-{
-    @Autowired
-    private ReviewRepo reviewRepo;
-    @Autowired
-    private ProductRepo productRepo;
-    @Autowired
-    private UserRepo userRepo;
+@RequiredArgsConstructor
+public class ReviewService {
 
-    public List<Review> getReviews()
-    {
-        return reviewRepo.findAll();
+    private final ReviewRepo reviewRepository;
+    private final ProductRepo productRepository;
+
+    @Transactional(readOnly = true)
+    public ReviewsResponse getForProduct(Integer productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+        var stats = reviewRepository.getStats(productId);
+        var reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId)
+                .stream().map(ReviewResponse::from).toList();
+
+        double avg = Math.round(stats.getAverage() * 10) / 10.0;
+        return new ReviewsResponse(avg, stats.getTotal(), reviews);
     }
 
-    public Review getReviewById(int id)
-    {
-        return reviewRepo.findById(id).orElse(null);
-    }
+    @Transactional
+    public ReviewResponse create(Integer productId, User user, CreateReviewDTO req) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-    public Review createReview(CreateReviewDTO request) {
-
-        User user = userRepo.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Product product = productRepo.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        if (reviewRepository.existsByUserIdAndProductId(user.getId(), productId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "You have already reviewed this product");
+        }
 
         Review review = new Review();
-        review.setUser(user);
         review.setProduct(product);
-        review.setRating(request.getRating());
-        review.setComment(request.getComment());
-        review.setCommentedAt(LocalDateTime.now());
-        return reviewRepo.save(review);
+        review.setUser(user);
+        review.setRating(req.rating());
+        review.setComment(req.comment());
+        return ReviewResponse.from(reviewRepository.save(review));
     }
-
-//    public void updateCategoryById(Category category)
-//    {
-//        categoryRepo.save(category);
-//    }
-
-//    public void deleteCategoryById(int id)
-//    {
-//        categoryRepo.deleteById(id);
-//    }
 }
