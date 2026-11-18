@@ -10,7 +10,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "reviews",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
+        indexes = @Index(name = "idx_reviews_product", columnList = "product_id"))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +20,12 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // One review per purchased item
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_item_id", nullable = false, unique = true)
+    private OrderItem orderItem;
+
+    // Copied from orderItem so product pages can list reviews without joining orders
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -33,6 +39,9 @@ public class Review {
 
     @Column(length = 2000)
     private String comment;
+
+    @Column(nullable = false)
+    private boolean anonymous = false;
 
     @CreationTimestamp
     @Column(updatable = false)

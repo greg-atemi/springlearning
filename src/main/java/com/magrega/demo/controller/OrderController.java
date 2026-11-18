@@ -1,7 +1,9 @@
 package com.magrega.demo.controller;
 
 import com.magrega.demo.dto.order.CreateOrderDTO;
+import com.magrega.demo.dto.order.OrderResponse;
 import com.magrega.demo.dto.order.UpdateOrderStatusDTO;
+import com.magrega.demo.mapper.OrderResponseMapper;
 import com.magrega.demo.model.Order;
 import com.magrega.demo.model.User;
 import com.magrega.demo.service.OrderService;
@@ -23,17 +25,18 @@ public class OrderController {
 
     private final OrderService service;
     private final UserService userService;
+    private final OrderResponseMapper mapper;
 
     @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getOrders() {
-        return new ResponseEntity<>(service.getOrders(), HttpStatus.OK);
+    public ResponseEntity<List<OrderResponse>> getOrders() {
+        return new ResponseEntity<>(mapper.toResponses(service.getOrders()), HttpStatus.OK);
     }
 
     @GetMapping("/order/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable int id) {
         Order order = service.getOrderById(id);
         if (order != null) {
-            return new ResponseEntity<>(order, HttpStatus.OK);
+            return new ResponseEntity<>(mapper.toResponse(order), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -60,9 +63,10 @@ public class OrderController {
     }
 
     @GetMapping("/orders/my")
-    public ResponseEntity<List<Order>> getMyOrders(
+    public ResponseEntity<List<OrderResponse>> getMyOrders(
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername());
-        return new ResponseEntity<>(service.getOrdersByUserId(user.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                mapper.toResponses(service.getOrdersByUserId(user.getId())), HttpStatus.OK);
     }
 }
